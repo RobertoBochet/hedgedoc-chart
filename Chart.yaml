@@ -1,0 +1,38 @@
+apiVersion: v2
+name: hedgedoc
+description: HedgeDoc Helm chart for Kubernetes
+type: application
+version: 0.0.0
+appVersion: 1.22.6
+
+keywords:
+  - editor
+  - markdown
+  - real-time
+  - notes
+  - collaboration
+  - diagrams
+  - hedgedoc
+  - hackmd
+  - codimd
+sources:
+  - https://github.com/RobertoBochet/hedgedoc-chart
+  - https://github.com/hedgedoc/hedgedoc
+  - https://quay.io/repository/hedgedoc/hedgedoc
+maintainers:
+  - name: Marco Costanzo
+    email: marcosti096@duck.com
+  - name: Roberto Bochet
+    email: r@robertobochet.me
+
+dependencies:
+  # https://github.com/bitnami/charts/blob/main/bitnami/postgresql
+  - name: postgresql
+    repository: oci://registry-1.docker.io/bitnamicharts
+    version: 16.3.2
+    condition: postgresql.enabled
+  # https://github.com/bitnami/charts/blob/main/bitnami/postgresql-ha/Chart.yaml
+  - name: postgresql-ha
+    repository: oci://registry-1.docker.io/bitnamicharts
+    version: 15.1.1
+    condition: postgresql-ha.enabled

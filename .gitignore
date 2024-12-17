@@ -1,0 +1,9 @@
+### Helm template
+# Chart dependencies
+**/charts/*.tgz
+
+# custom values files
+/*.y[a]ml
+
+# release charts
+/*.tgz
