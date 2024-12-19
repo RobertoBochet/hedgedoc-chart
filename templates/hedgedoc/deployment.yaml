@@ -94,6 +94,10 @@ spec:
               {{- if .Values.persistence.subPath }}
               subPath: {{ .Values.persistence.subPath }}
               {{- end }}
+            {{- range $idx, $value := .Values.hedgedoc.additionalConfigSources }}
+            - name: additional-config-sources-{{ $idx }}
+              mountPath: $value.mountPath
+            {{- end }}
             {{- include "hedgedoc.container-additional-mounts" . | nindent 12 }}
         {{- if .Values.extraContainers }}
         {{- toYaml .Values.extraContainers | nindent 8 }}
@@ -131,6 +135,7 @@ spec:
         {{- toYaml .Values.extraVolumes | nindent 8 }}
         {{- end }}
         {{- range $idx, $value := .Values.hedgedoc.additionalConfigSources }}
+        {{- $value := unset $value "mountPath" -}}
         - name: additional-config-sources-{{ $idx }}
           {{- toYaml $value | nindent 10 }}
         {{- end }}

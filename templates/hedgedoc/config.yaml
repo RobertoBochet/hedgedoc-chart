@@ -1,4 +1,4 @@
-{{- include "hedgedoc.config.dbUrlInit" . }}
+{{- include "hedgedoc.config.init" . }}
 apiVersion: v1
 kind: Secret
 metadata:

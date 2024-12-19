@@ -1,0 +1,31 @@
+{{- if and .Values.persistence.enabled .Values.persistence.create (eq .Values.hedgedoc.config.imageUploadType "filesystem") }}
+  {{- if gt .Values.replicaCount 1.0 -}}
+    {{- if eq (first .Values.persistence.accessModes) "ReadWriteOnce" -}}
+      {{- fail "When using multiple replicas, a RWX file system is required and persistence.accessModes[0] must be set to ReadWriteMany." -}}
+    {{- end }}
+  {{- end }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ .Values.persistence.claimName }}
+  namespace: {{ .Values.namespace | default .Release.Namespace }}
+  annotations:
+{{ .Values.persistence.annotations | toYaml | indent 4}}
+  labels:
+{{ .Values.persistence.labels | toYaml | indent 4}}
+spec:
+  accessModes:
+  {{- if gt .Values.replicaCount 1.0 }}
+      - ReadWriteMany
+  {{- else }}
+    {{- .Values.persistence.accessModes | toYaml | nindent 4 }}
+  {{- end }}
+  volumeMode: Filesystem
+  {{- include "hedgedoc.persistence.storageClass" . | nindent 2 }}
+  {{- with .Values.persistence.volumeName }}
+  volumeName: {{ . }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.size }}
+{{- end }}

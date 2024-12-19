@@ -112,7 +112,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 {{- end -}}
 
-{{- define "hedgedoc.config.dbUrlInit" -}}
+{{- define "hedgedoc.config.init" -}}
   {{- /*assert that only one PG dep is enabled */ -}}
   {{- if and (.Values.postgresql.enabled) (index .Values "postgresql-ha" "enabled") -}}
     {{- fail "Only one of postgresql or postgresql-ha can be enabled at the same time." -}}
@@ -132,6 +132,9 @@ app.kubernetes.io/instance: {{ .Release.Name }}
                                               (include "postgresql.dns" .)
                                               (index .Values "postgresql" "global" "postgresql" "auth" "database")) -}}
     {{- end -}}
+  {{- end -}}
+  {{- if and (eq .Values.hedgedoc.config.imageUploadType "filesystem") (not .Values.hedgedoc.config.uploadsPath) -}}
+    {{- $_ := set .Values.hedgedoc.config "uploadsPath" "/data" -}}
   {{- end -}}
 {{- end -}}
 
