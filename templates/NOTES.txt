@@ -40,6 +40,9 @@
     {{- $warnings = append $warnings (printf "You should change `%s`" $changeMeValuePath) -}}
   {{- end }}
 {{- end }}
+{{- if and .Values.ingress.enabled (not .Values.hedgedoc.config.domain) -}}
+  {{- $warnings = append $warnings "You should set `hedgedoc.config.domain` if you use ingress" -}}
+{{- end -}}
 {{- if and .Values.ingress.enabled .Values.ingress.tls (not .Values.hedgedoc.config.protocolUseSSL) -}}
   {{- $warnings = append $warnings "You should set `hedgedoc.config.protocolUseSSL` to true if you use ingress with TLS" -}}
 {{- end -}}
