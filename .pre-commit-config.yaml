@@ -3,6 +3,7 @@ repos:
   rev: v5.0.0
   hooks:
     - id: end-of-file-fixer
+      exclude: values.schema.json
     - id: trailing-whitespace
 - repo: https://github.com/gruntwork-io/pre-commit
   rev: v0.1.25
