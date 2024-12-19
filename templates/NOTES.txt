@@ -18,3 +18,13 @@
   echo "Visit http://127.0.0.1:{{ .Values.service.http.port }} to use your application"
   kubectl --namespace {{ .Release.Namespace }} port-forward svc/{{ .Release.Name }}-http {{ .Values.service.http.port }}:{{ .Values.service.http.port }}
 {{- end }}
+{{- $warnings := list -}}
+{{- if eq .Values.hedgedoc.config.sessionSecret "changeme" -}}
+  {{- $warnings = append $warnings "You should change the `hedgedoc.config.sessionSecret` with a generated one" -}}
+{{- end }}
+{{- if gt (len $warnings) 0 }}
+2. Review these warnings:
+{{- range $warnings }}
+  - {{ . }}
+{{- end }}
+{{- end }}
