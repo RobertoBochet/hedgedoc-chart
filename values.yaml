@@ -103,15 +103,15 @@ service:
     type: ClusterIP
     port: 3000
     clusterIP: None
-    nodePort:
-    externalTrafficPolicy:
-    externalIPs:
-    ipFamilyPolicy:
-    ipFamilies:
+    nodePort: ""
+    externalTrafficPolicy: ""
+    externalIPs: []
+    ipFamilyPolicy: ""
+    ipFamilies: []
     loadBalancerSourceRanges: []
     annotations: {}
     labels: {}
-    loadBalancerClass:
+    loadBalancerClass: ""
 
 ## @section Ingress
 ## @param ingress.enabled Enable ingress
@@ -123,9 +123,9 @@ service:
 ## @param ingress.tls Ingress tls settings
 ## @extra ingress.apiVersion Specify APIVersion of ingress object. Mostly would only be used for argocd.
 ingress:
-  enabled: false
+  enabled: true
   # className: nginx
-  className:
+  className: ""
   annotations:
     {}
     # kubernetes.io/ingress.class: nginx
@@ -230,8 +230,8 @@ persistence:
   accessModes:
     - ReadWriteOnce
   labels: {}
-  storageClass:
-  subPath:
+  storageClass: ""
+  subPath: ""
   volumeName: ""
   annotations:
     helm.sh/resource-policy: keep
@@ -254,6 +254,7 @@ extraContainerVolumeMounts: []
 ## @section HedgeDoc
 #
 hedgedoc:
+  ## @extra hedgedoc.config In this section only some available parameters are shown, but it is possible to set all HedgeDoc configuration options. Visit: [HedgeDoc docs](https://docs.hedgedoc.org/configuration/)
   ## @param hedgedoc.config.imageUploadType Where to upload images. Options are: filesystem, imgur, s3, minio, azure, lutim
   ## @param hedgedoc.config.domain Domain name
   ## @param hedgedoc.config.port Port to listen on
