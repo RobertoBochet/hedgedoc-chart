@@ -461,6 +461,11 @@
                             "description": "Port to listen on",
                             "default": 3000
                         },
+                        "protocolUseSSL": {
+                            "type": "boolean",
+                            "description": "`true` if you want to serve your instance over SSL (HTTPS), `false` if you want to use plain HTTP. If the ingress uses TLS, it should be set to `true`",
+                            "default": false
+                        },
                         "allowAnonymous": {
                             "type": "boolean",
                             "description": "Set to allow anonymous usage",
@@ -635,37 +640,12 @@
                     "description": "Enable PostgreSQL HA",
                     "default": true
                 },
-                "postgresql": {
-                    "type": "object",
-                    "properties": {
-                        "password": {
-                            "type": "string",
-                            "description": "Password for the `hedgedoc` user (overrides `auth.password`)",
-                            "default": "changeme"
-                        },
-                        "repmgrPassword": {
-                            "type": "string",
-                            "description": "Repmgr Password",
-                            "default": "changeme"
-                        },
-                        "postgresPassword": {
-                            "type": "string",
-                            "description": "postgres Password",
-                            "default": "changeme"
-                        }
-                    }
-                },
                 "global": {
                     "type": "object",
                     "properties": {
                         "postgresql": {
                             "type": "object",
                             "properties": {
-                                "database": {
-                                    "type": "string",
-                                    "description": "Name for a custom database to create (overrides `auth.database`)",
-                                    "default": "hedgedoc"
-                                },
                                 "username": {
                                     "type": "string",
                                     "description": "Name for a custom user to create (overrides `auth.username`)",
@@ -673,35 +653,40 @@
                                 },
                                 "password": {
                                     "type": "string",
-                                    "description": "Name for a custom password to create (overrides `auth.password`)",
+                                    "description": "Password for the `hedgedoc` user (overrides `auth.password`)",
+                                    "default": "changeme"
+                                },
+                                "database": {
+                                    "type": "string",
+                                    "description": "Name for a custom database to create (overrides `auth.database`)",
                                     "default": "hedgedoc"
+                                },
+                                "repmgrPassword": {
+                                    "type": "string",
+                                    "description": "PostgreSQL repmgr password (overrides postgresql.repmgrpassword)",
+                                    "default": "changeme"
                                 }
                             }
-                        }
-                    }
-                },
-                "pgpool": {
-                    "type": "object",
-                    "properties": {
-                        "adminPassword": {
-                            "type": "string",
-                            "description": "pgpool adminPassword",
-                            "default": "changeme"
-                        }
-                    }
-                },
-                "service": {
-                    "type": "object",
-                    "properties": {
-                        "ports": {
+                        },
+                        "pgpool": {
                             "type": "object",
                             "properties": {
-                                "postgresql": {
-                                    "type": "number",
-                                    "description": "PostgreSQL service port (overrides `service.ports.postgresql`)",
-                                    "default": 5432
+                                "adminPassword": {
+                                    "type": "string",
+                                    "description": "Pgpool Admin password (overrides pgpool.adminPassword)",
+                                    "default": "changeme"
                                 }
                             }
+                        }
+                    }
+                },
+                "postgresql": {
+                    "type": "object",
+                    "properties": {
+                        "postgresPassword": {
+                            "type": "string",
+                            "description": "PostgreSQL password for the postgres user when username is not postgres",
+                            "default": "changeme"
                         }
                     }
                 },
@@ -734,35 +719,25 @@
                                 "auth": {
                                     "type": "object",
                                     "properties": {
-                                        "password": {
+                                        "postgresPassword": {
                                             "type": "string",
-                                            "description": "Password for the `hedgedoc` user (overrides `auth.password`)",
-                                            "default": "hedgedoc"
-                                        },
-                                        "database": {
-                                            "type": "string",
-                                            "description": "Name for a custom database to create (overrides `auth.database`)",
-                                            "default": "hedgedoc"
+                                            "description": "Password for the \"postgres\" admin user (overrides auth.postgresPassword)",
+                                            "default": "changeme"
                                         },
                                         "username": {
                                             "type": "string",
                                             "description": "Name for a custom user to create (overrides `auth.username`)",
                                             "default": "hedgedoc"
-                                        }
-                                    }
-                                },
-                                "service": {
-                                    "type": "object",
-                                    "properties": {
-                                        "ports": {
-                                            "type": "object",
-                                            "properties": {
-                                                "postgresql": {
-                                                    "type": "number",
-                                                    "description": "PostgreSQL service port (overrides `service.ports.postgresql`)",
-                                                    "default": 5432
-                                                }
-                                            }
+                                        },
+                                        "password": {
+                                            "type": "string",
+                                            "description": "Password for the `hedgedoc` user (overrides `auth.password`)",
+                                            "default": "changeme"
+                                        },
+                                        "database": {
+                                            "type": "string",
+                                            "description": "Name for a custom database to create (overrides `auth.database`)",
+                                            "default": "hedgedoc"
                                         }
                                     }
                                 }

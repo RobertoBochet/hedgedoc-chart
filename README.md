@@ -151,6 +151,7 @@
 | `hedgedoc.config.imageUploadType`              | Where to upload images. Options are: filesystem, imgur, s3, minio, azure, lutim                                                                                                                         | `filesystem` |
 | `hedgedoc.config.domain`                       | Domain name                                                                                                                                                                                             | `""`         |
 | `hedgedoc.config.port`                         | Port to listen on                                                                                                                                                                                       | `3000`       |
+| `hedgedoc.config.protocolUseSSL`               | `true` if you want to serve your instance over SSL (HTTPS), `false` if you want to use plain HTTP. If the ingress uses TLS, it should be set to `true`                                                  | `false`      |
 | `hedgedoc.config.allowAnonymous`               | Set to allow anonymous usage                                                                                                                                                                            | `true`       |
 | `hedgedoc.config.allowAnonymousEdits`          | If allowAnonymous is false: allow users to select freely permission, allowing guests to edit existing notes                                                                                             | `false`      |
 | `hedgedoc.config.allowFreeURL`                 | Set to allow new note creation by accessing a nonexistent note URL. This is the behavior familiar from Etherpad                                                                                         | `false`      |
@@ -198,29 +199,29 @@
 
 ### PostgreSQL HA
 
-| Name                                        | Description                                                      | Value      |
-| ------------------------------------------- | ---------------------------------------------------------------- | ---------- |
-| `postgresql-ha.enabled`                     | Enable PostgreSQL HA                                             | `true`     |
-| `postgresql-ha.postgresql.password`         | Password for the `hedgedoc` user (overrides `auth.password`)     | `changeme` |
-| `postgresql-ha.global.postgresql.database`  | Name for a custom database to create (overrides `auth.database`) | `hedgedoc` |
-| `postgresql-ha.global.postgresql.username`  | Name for a custom user to create (overrides `auth.username`)     | `hedgedoc` |
-| `postgresql-ha.global.postgresql.password`  | Name for a custom password to create (overrides `auth.password`) | `hedgedoc` |
-| `postgresql-ha.postgresql.repmgrPassword`   | Repmgr Password                                                  | `changeme` |
-| `postgresql-ha.postgresql.postgresPassword` | postgres Password                                                | `changeme` |
-| `postgresql-ha.pgpool.adminPassword`        | pgpool adminPassword                                             | `changeme` |
-| `postgresql-ha.service.ports.postgresql`    | PostgreSQL service port (overrides `service.ports.postgresql`)   | `5432`     |
-| `postgresql-ha.persistence.size`            | PVC Storage Request for PostgreSQL HA volume                     | `10Gi`     |
+| Name                                             | Description                                                                                                                       | Value      |
+| ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| `postgresql-ha`                                  | PostgreSQL HA Bitnami chart values. Visit: [PostgreSQL HA chart docs](https://artifacthub.io/packages/helm/bitnami/postgresql-ha) |            |
+| `postgresql-ha.enabled`                          | Enable PostgreSQL HA                                                                                                              | `true`     |
+| `postgresql-ha.global.postgresql.username`       | Name for a custom user to create (overrides `auth.username`)                                                                      | `hedgedoc` |
+| `postgresql-ha.global.postgresql.password`       | Password for the `hedgedoc` user (overrides `auth.password`)                                                                      | `changeme` |
+| `postgresql-ha.global.postgresql.database`       | Name for a custom database to create (overrides `auth.database`)                                                                  | `hedgedoc` |
+| `postgresql-ha.global.postgresql.repmgrPassword` | PostgreSQL repmgr password (overrides postgresql.repmgrpassword)                                                                  | `changeme` |
+| `postgresql-ha.global.pgpool.adminPassword`      | Pgpool Admin password (overrides pgpool.adminPassword)                                                                            | `changeme` |
+| `postgresql-ha.postgresql.postgresPassword`      | PostgreSQL password for the postgres user when username is not postgres                                                           | `changeme` |
+| `postgresql-ha.persistence.size`                 | PVC Storage Request for PostgreSQL HA volume                                                                                      | `10Gi`     |
 
 ### PostgreSQL
 
-| Name                                                    | Description                                                      | Value      |
-| ------------------------------------------------------- | ---------------------------------------------------------------- | ---------- |
-| `postgresql.enabled`                                    | Enable PostgreSQL                                                | `false`    |
-| `postgresql.global.postgresql.auth.password`            | Password for the `hedgedoc` user (overrides `auth.password`)     | `hedgedoc` |
-| `postgresql.global.postgresql.auth.database`            | Name for a custom database to create (overrides `auth.database`) | `hedgedoc` |
-| `postgresql.global.postgresql.auth.username`            | Name for a custom user to create (overrides `auth.username`)     | `hedgedoc` |
-| `postgresql.global.postgresql.service.ports.postgresql` | PostgreSQL service port (overrides `service.ports.postgresql`)   | `5432`     |
-| `postgresql.primary.persistence.size`                   | PVC Storage Request for PostgreSQL volume                        | `10Gi`     |
+| Name                                                 | Description                                                                                                              | Value      |
+| ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | ---------- |
+| `postgresql-ha`                                      | PostgreSQL Bitnami chart values. Visit: [PostgreSQL chart docs](https://artifacthub.io/packages/helm/bitnami/postgresql) |            |
+| `postgresql.enabled`                                 | Enable PostgreSQL                                                                                                        | `false`    |
+| `postgresql.global.postgresql.auth.postgresPassword` | Password for the "postgres" admin user (overrides auth.postgresPassword)                                                 | `changeme` |
+| `postgresql.global.postgresql.auth.username`         | Name for a custom user to create (overrides `auth.username`)                                                             | `hedgedoc` |
+| `postgresql.global.postgresql.auth.password`         | Password for the `hedgedoc` user (overrides `auth.password`)                                                             | `changeme` |
+| `postgresql.global.postgresql.auth.database`         | Name for a custom database to create (overrides `auth.database`)                                                         | `hedgedoc` |
+| `postgresql.primary.persistence.size`                | PVC Storage Request for PostgreSQL volume                                                                                | `10Gi`     |
 
 ### Advanced
 
