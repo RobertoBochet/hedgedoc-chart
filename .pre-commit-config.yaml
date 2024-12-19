@@ -12,11 +12,9 @@ repos:
   rev: 2.6.1
   hooks:
     - id: helm-readme-generator
-      # in order to run helm-readme-generator only once
       pass_filenames: false
       always_run: true
-      # default args are [--readme=chart/README.md, --values=chart/values.yaml]
-      args: [--readme=README.md, --values=values.yaml]
+      args: [--readme=README.md, --values=values.yaml, --schema=values.schema.json]
 - repo: https://github.com/tcort/markdown-link-check
   rev: v3.13.6
   hooks:
