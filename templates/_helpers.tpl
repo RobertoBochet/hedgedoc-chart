@@ -102,13 +102,13 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 
 {{- define "postgresql-ha.dns" -}}
 {{- if (index .Values "postgresql-ha").enabled -}}
-{{- printf "%s-postgresql-ha-pgpool.%s.svc.%s:%g" .Release.Name .Release.Namespace .Values.clusterDomain (index .Values "postgresql-ha" "service" "ports" "postgresql") -}}
+{{- printf "%s.%s.svc.%s:%v" (include "postgresql-ha.pgpool" (index .Subcharts "postgresql-ha")) .Release.Namespace .Values.clusterDomain (index .Values "postgresql-ha" "service" "ports" "postgresql") -}}
 {{- end -}}
 {{- end -}}
 
 {{- define "postgresql.dns" -}}
 {{- if (index .Values "postgresql").enabled -}}
-{{- printf "%s-postgresql.%s.svc.%s:%g" .Release.Name .Release.Namespace .Values.clusterDomain .Values.postgresql.global.postgresql.service.ports.postgresql -}}
+{{- printf "%s.%s.svc.%s:%s" (include "common.names.fullname" .Subcharts.postgresql) .Release.Namespace .Values.clusterDomain (include "postgresql.v1.service.port" .Subcharts.postgresql) -}}
 {{- end -}}
 {{- end -}}
 
