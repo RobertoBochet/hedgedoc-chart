@@ -640,52 +640,42 @@
                     "description": "Enable PostgreSQL HA",
                     "default": true
                 },
-                "global": {
-                    "type": "object",
-                    "properties": {
-                        "postgresql": {
-                            "type": "object",
-                            "properties": {
-                                "username": {
-                                    "type": "string",
-                                    "description": "Name for a custom user to create (overrides `auth.username`)",
-                                    "default": "hedgedoc"
-                                },
-                                "password": {
-                                    "type": "string",
-                                    "description": "Password for the `hedgedoc` user (overrides `auth.password`)",
-                                    "default": "changeme"
-                                },
-                                "database": {
-                                    "type": "string",
-                                    "description": "Name for a custom database to create (overrides `auth.database`)",
-                                    "default": "hedgedoc"
-                                },
-                                "repmgrPassword": {
-                                    "type": "string",
-                                    "description": "PostgreSQL repmgr password (overrides postgresql.repmgrpassword)",
-                                    "default": "changeme"
-                                }
-                            }
-                        },
-                        "pgpool": {
-                            "type": "object",
-                            "properties": {
-                                "adminPassword": {
-                                    "type": "string",
-                                    "description": "Pgpool Admin password (overrides pgpool.adminPassword)",
-                                    "default": "changeme"
-                                }
-                            }
-                        }
-                    }
-                },
                 "postgresql": {
                     "type": "object",
                     "properties": {
+                        "username": {
+                            "type": "string",
+                            "description": "Name for a custom user to create",
+                            "default": "hedgedoc"
+                        },
+                        "password": {
+                            "type": "string",
+                            "description": "Password for the `hedgedoc` user",
+                            "default": "changeme"
+                        },
+                        "database": {
+                            "type": "string",
+                            "description": "Name for a custom database to create",
+                            "default": "hedgedoc"
+                        },
                         "postgresPassword": {
                             "type": "string",
                             "description": "PostgreSQL password for the postgres user when username is not postgres",
+                            "default": "changeme"
+                        },
+                        "repmgrPassword": {
+                            "type": "string",
+                            "description": "PostgreSQL repmgr password",
+                            "default": "changeme"
+                        }
+                    }
+                },
+                "pgpool": {
+                    "type": "object",
+                    "properties": {
+                        "adminPassword": {
+                            "type": "string",
+                            "description": "Pgpool Admin password",
                             "default": "changeme"
                         }
                     }
@@ -710,38 +700,28 @@
                     "description": "Enable PostgreSQL",
                     "default": false
                 },
-                "global": {
+                "auth": {
                     "type": "object",
                     "properties": {
-                        "postgresql": {
-                            "type": "object",
-                            "properties": {
-                                "auth": {
-                                    "type": "object",
-                                    "properties": {
-                                        "postgresPassword": {
-                                            "type": "string",
-                                            "description": "Password for the \"postgres\" admin user (overrides auth.postgresPassword)",
-                                            "default": "changeme"
-                                        },
-                                        "username": {
-                                            "type": "string",
-                                            "description": "Name for a custom user to create (overrides `auth.username`)",
-                                            "default": "hedgedoc"
-                                        },
-                                        "password": {
-                                            "type": "string",
-                                            "description": "Password for the `hedgedoc` user (overrides `auth.password`)",
-                                            "default": "changeme"
-                                        },
-                                        "database": {
-                                            "type": "string",
-                                            "description": "Name for a custom database to create (overrides `auth.database`)",
-                                            "default": "hedgedoc"
-                                        }
-                                    }
-                                }
-                            }
+                        "postgresPassword": {
+                            "type": "string",
+                            "description": "Password for the \"postgres\" admin user",
+                            "default": "changeme"
+                        },
+                        "username": {
+                            "type": "string",
+                            "description": "Name for a custom user to create",
+                            "default": "hedgedoc"
+                        },
+                        "password": {
+                            "type": "string",
+                            "description": "Password for the `hedgedoc` user",
+                            "default": "changeme"
+                        },
+                        "database": {
+                            "type": "string",
+                            "description": "Name for a custom database to create",
+                            "default": "hedgedoc"
                         }
                     }
                 },

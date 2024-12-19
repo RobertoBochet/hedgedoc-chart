@@ -199,29 +199,29 @@
 
 ### PostgreSQL HA
 
-| Name                                             | Description                                                                                                                       | Value      |
-| ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| `postgresql-ha`                                  | PostgreSQL HA Bitnami chart values. Visit: [PostgreSQL HA chart docs](https://artifacthub.io/packages/helm/bitnami/postgresql-ha) |            |
-| `postgresql-ha.enabled`                          | Enable PostgreSQL HA                                                                                                              | `true`     |
-| `postgresql-ha.global.postgresql.username`       | Name for a custom user to create (overrides `auth.username`)                                                                      | `hedgedoc` |
-| `postgresql-ha.global.postgresql.password`       | Password for the `hedgedoc` user (overrides `auth.password`)                                                                      | `changeme` |
-| `postgresql-ha.global.postgresql.database`       | Name for a custom database to create (overrides `auth.database`)                                                                  | `hedgedoc` |
-| `postgresql-ha.global.postgresql.repmgrPassword` | PostgreSQL repmgr password (overrides postgresql.repmgrpassword)                                                                  | `changeme` |
-| `postgresql-ha.global.pgpool.adminPassword`      | Pgpool Admin password (overrides pgpool.adminPassword)                                                                            | `changeme` |
-| `postgresql-ha.postgresql.postgresPassword`      | PostgreSQL password for the postgres user when username is not postgres                                                           | `changeme` |
-| `postgresql-ha.persistence.size`                 | PVC Storage Request for PostgreSQL HA volume                                                                                      | `10Gi`     |
+| Name                                        | Description                                                                                                                       | Value      |
+| ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| `postgresql-ha`                             | PostgreSQL HA Bitnami chart values. Visit: [PostgreSQL HA chart docs](https://artifacthub.io/packages/helm/bitnami/postgresql-ha) |            |
+| `postgresql-ha.enabled`                     | Enable PostgreSQL HA                                                                                                              | `true`     |
+| `postgresql-ha.postgresql.username`         | Name for a custom user to create                                                                                                  | `hedgedoc` |
+| `postgresql-ha.postgresql.password`         | Password for the `hedgedoc` user                                                                                                  | `changeme` |
+| `postgresql-ha.postgresql.database`         | Name for a custom database to create                                                                                              | `hedgedoc` |
+| `postgresql-ha.postgresql.postgresPassword` | PostgreSQL password for the postgres user when username is not postgres                                                           | `changeme` |
+| `postgresql-ha.postgresql.repmgrPassword`   | PostgreSQL repmgr password                                                                                                        | `changeme` |
+| `postgresql-ha.pgpool.adminPassword`        | Pgpool Admin password                                                                                                             | `changeme` |
+| `postgresql-ha.persistence.size`            | PVC Storage Request for PostgreSQL HA volume                                                                                      | `10Gi`     |
 
 ### PostgreSQL
 
-| Name                                                 | Description                                                                                                              | Value      |
-| ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | ---------- |
-| `postgresql-ha`                                      | PostgreSQL Bitnami chart values. Visit: [PostgreSQL chart docs](https://artifacthub.io/packages/helm/bitnami/postgresql) |            |
-| `postgresql.enabled`                                 | Enable PostgreSQL                                                                                                        | `false`    |
-| `postgresql.global.postgresql.auth.postgresPassword` | Password for the "postgres" admin user (overrides auth.postgresPassword)                                                 | `changeme` |
-| `postgresql.global.postgresql.auth.username`         | Name for a custom user to create (overrides `auth.username`)                                                             | `hedgedoc` |
-| `postgresql.global.postgresql.auth.password`         | Password for the `hedgedoc` user (overrides `auth.password`)                                                             | `changeme` |
-| `postgresql.global.postgresql.auth.database`         | Name for a custom database to create (overrides `auth.database`)                                                         | `hedgedoc` |
-| `postgresql.primary.persistence.size`                | PVC Storage Request for PostgreSQL volume                                                                                | `10Gi`     |
+| Name                                  | Description                                                                                                              | Value      |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | ---------- |
+| `postgresql-ha`                       | PostgreSQL Bitnami chart values. Visit: [PostgreSQL chart docs](https://artifacthub.io/packages/helm/bitnami/postgresql) |            |
+| `postgresql.enabled`                  | Enable PostgreSQL                                                                                                        | `false`    |
+| `postgresql.auth.postgresPassword`    | Password for the "postgres" admin user                                                                                   | `changeme` |
+| `postgresql.auth.username`            | Name for a custom user to create                                                                                         | `hedgedoc` |
+| `postgresql.auth.password`            | Password for the `hedgedoc` user                                                                                         | `changeme` |
+| `postgresql.auth.database`            | Name for a custom database to create                                                                                     | `hedgedoc` |
+| `postgresql.primary.persistence.size` | PVC Storage Request for PostgreSQL volume                                                                                | `10Gi`     |
 
 ### Advanced
 
