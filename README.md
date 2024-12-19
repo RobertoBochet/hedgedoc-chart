@@ -74,22 +74,22 @@
 | `service.http.type`                     | Kubernetes service type for web traffic                                                                                                                                                              | `ClusterIP` |
 | `service.http.port`                     | Port number for web traffic                                                                                                                                                                          | `3000`      |
 | `service.http.clusterIP`                | ClusterIP setting for http autosetup for deployment is None                                                                                                                                          | `None`      |
-| `service.http.nodePort`                 | NodePort for http service                                                                                                                                                                            | `nil`       |
-| `service.http.externalTrafficPolicy`    | If `service.http.type` is `NodePort` or `LoadBalancer`, set this to `Local` to enable source IP preservation                                                                                         | `nil`       |
-| `service.http.externalIPs`              | External IPs for service                                                                                                                                                                             | `nil`       |
-| `service.http.ipFamilyPolicy`           | HTTP service dual-stack policy                                                                                                                                                                       | `nil`       |
-| `service.http.ipFamilies`               | HTTP service dual-stack familiy selection,for dual-stack parameters see official kubernetes [dual-stack concept documentation](https://kubernetes.io/docs/concepts/services-networking/dual-stack/). | `nil`       |
+| `service.http.nodePort`                 | NodePort for http service                                                                                                                                                                            | `""`        |
+| `service.http.externalTrafficPolicy`    | If `service.http.type` is `NodePort` or `LoadBalancer`, set this to `Local` to enable source IP preservation                                                                                         | `""`        |
+| `service.http.externalIPs`              | External IPs for service                                                                                                                                                                             | `[]`        |
+| `service.http.ipFamilyPolicy`           | HTTP service dual-stack policy                                                                                                                                                                       | `""`        |
+| `service.http.ipFamilies`               | HTTP service dual-stack familiy selection,for dual-stack parameters see official kubernetes [dual-stack concept documentation](https://kubernetes.io/docs/concepts/services-networking/dual-stack/). | `[]`        |
 | `service.http.loadBalancerSourceRanges` | Source range filter for http loadbalancer                                                                                                                                                            | `[]`        |
 | `service.http.annotations`              | HTTP service annotations                                                                                                                                                                             | `{}`        |
 | `service.http.labels`                   | HTTP service additional labels                                                                                                                                                                       | `{}`        |
-| `service.http.loadBalancerClass`        | Loadbalancer class                                                                                                                                                                                   | `nil`       |
+| `service.http.loadBalancerClass`        | Loadbalancer class                                                                                                                                                                                   | `""`        |
 
 ### Ingress
 
 | Name                                 | Description                                                                 | Value                  |
 | ------------------------------------ | --------------------------------------------------------------------------- | ---------------------- |
-| `ingress.enabled`                    | Enable ingress                                                              | `false`                |
-| `ingress.className`                  | Ingress class name                                                          | `nil`                  |
+| `ingress.enabled`                    | Enable ingress                                                              | `true`                 |
+| `ingress.className`                  | Ingress class name                                                          | `""`                   |
 | `ingress.annotations`                | Ingress annotations                                                         | `{}`                   |
 | `ingress.hosts[0].host`              | Default Ingress host                                                        | `hedgedoc.example.com` |
 | `ingress.hosts[0].paths[0].path`     | Default Ingress path                                                        | `/`                    |
@@ -136,8 +136,8 @@
 | `persistence.accessModes`                         | AccessMode for persistence                                                                            | `["ReadWriteOnce"]` |
 | `persistence.labels`                              | Labels for the persistence volume claim to be created                                                 | `{}`                |
 | `persistence.annotations.helm.sh/resource-policy` | Resource policy for the persistence volume claim                                                      | `keep`              |
-| `persistence.storageClass`                        | Name of the storage class to use                                                                      | `nil`               |
-| `persistence.subPath`                             | Subdirectory of the volume to mount at                                                                | `nil`               |
+| `persistence.storageClass`                        | Name of the storage class to use                                                                      | `""`                |
+| `persistence.subPath`                             | Subdirectory of the volume to mount at                                                                | `""`                |
 | `persistence.volumeName`                          | Name of persistent volume in PVC                                                                      | `""`                |
 | `extraContainers`                                 | Additional sidecar containers to run in the pod                                                       | `[]`                |
 | `extraVolumes`                                    | Additional volumes to mount to the Gitea deployment                                                   | `[]`                |
@@ -147,6 +147,7 @@
 
 | Name                                           | Description                                                                                                                                                                                             | Value        |
 | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| `hedgedoc.config`                              | In this section only some available parameters are shown, but it is possible to set all HedgeDoc configuration options. Visit: [HedgeDoc docs](https://docs.hedgedoc.org/configuration/)                |              |
 | `hedgedoc.config.imageUploadType`              | Where to upload images. Options are: filesystem, imgur, s3, minio, azure, lutim                                                                                                                         | `filesystem` |
 | `hedgedoc.config.domain`                       | Domain name                                                                                                                                                                                             | `""`         |
 | `hedgedoc.config.port`                         | Port to listen on                                                                                                                                                                                       | `3000`       |
