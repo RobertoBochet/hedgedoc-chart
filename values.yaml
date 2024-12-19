@@ -258,6 +258,7 @@ hedgedoc:
   ## @param hedgedoc.config.imageUploadType Where to upload images. Options are: filesystem, imgur, s3, minio, azure, lutim
   ## @param hedgedoc.config.domain Domain name
   ## @param hedgedoc.config.port Port to listen on
+  ## @param hedgedoc.config.protocolUseSSL `true` if you want to serve your instance over SSL (HTTPS), `false` if you want to use plain HTTP. If the ingress uses TLS, it should be set to `true`
   ## @param hedgedoc.config.allowAnonymous Set to allow anonymous usage
   ## @param hedgedoc.config.allowAnonymousEdits If allowAnonymous is false: allow users to select freely permission, allowing guests to edit existing notes
   ## @param hedgedoc.config.allowFreeURL Set to allow new note creation by accessing a nonexistent note URL. This is the behavior familiar from Etherpad
@@ -270,6 +271,7 @@ hedgedoc:
     imageUploadType: "filesystem"
     domain: ""
     port: 3000
+    protocolUseSSL: false
     allowAnonymous: true
     allowAnonymousEdits: false
     allowFreeURL: false
@@ -347,54 +349,48 @@ hedgedoc:
 
 ## @section PostgreSQL HA
 #
+## @extra postgresql-ha PostgreSQL HA Bitnami chart values. Visit: [PostgreSQL HA chart docs](https://artifacthub.io/packages/helm/bitnami/postgresql-ha)
 ## @param postgresql-ha.enabled Enable PostgreSQL HA
-## @param postgresql-ha.postgresql.password Password for the `hedgedoc` user (overrides `auth.password`)
-## @param postgresql-ha.global.postgresql.database Name for a custom database to create (overrides `auth.database`)
 ## @param postgresql-ha.global.postgresql.username Name for a custom user to create (overrides `auth.username`)
-## @param postgresql-ha.global.postgresql.password Name for a custom password to create (overrides `auth.password`)
-## @param postgresql-ha.postgresql.repmgrPassword Repmgr Password
-## @param postgresql-ha.postgresql.postgresPassword postgres Password
-## @param postgresql-ha.pgpool.adminPassword pgpool adminPassword
-## @param postgresql-ha.service.ports.postgresql PostgreSQL service port (overrides `service.ports.postgresql`)
+## @param postgresql-ha.global.postgresql.password Password for the `hedgedoc` user (overrides `auth.password`)
+## @param postgresql-ha.global.postgresql.database Name for a custom database to create (overrides `auth.database`)
+## @param postgresql-ha.global.postgresql.repmgrPassword PostgreSQL repmgr password (overrides postgresql.repmgrpassword)
+## @param postgresql-ha.global.pgpool.adminPassword Pgpool Admin password (overrides pgpool.adminPassword)
+## @param postgresql-ha.postgresql.postgresPassword PostgreSQL password for the postgres user when username is not postgres
 ## @param postgresql-ha.persistence.size PVC Storage Request for PostgreSQL HA volume
 postgresql-ha:
+  enabled: true
   global:
     postgresql:
-      database: hedgedoc
-      password: hedgedoc
       username: hedgedoc
-  enabled: true
+      password: changeme
+      database: hedgedoc
+      repmgrPassword: changeme
+    pgpool:
+      adminPassword: changeme
   postgresql:
-    repmgrPassword: changeme
     postgresPassword: changeme
-    password: changeme
-  pgpool:
-    adminPassword: changeme
-  service:
-    ports:
-      postgresql: 5432
   persistence:
     size: 10Gi
 
 ## @section PostgreSQL
 #
+## @extra postgresql-ha PostgreSQL Bitnami chart values. Visit: [PostgreSQL chart docs](https://artifacthub.io/packages/helm/bitnami/postgresql)
 ## @param postgresql.enabled Enable PostgreSQL
+## @param postgresql.global.postgresql.auth.password Password for the "postgres" admin user (overrides auth.postgresPassword)
+## @param postgresql.global.postgresql.auth.username Name for a custom user to create (overrides `auth.username`)
 ## @param postgresql.global.postgresql.auth.password Password for the `hedgedoc` user (overrides `auth.password`)
 ## @param postgresql.global.postgresql.auth.database Name for a custom database to create (overrides `auth.database`)
-## @param postgresql.global.postgresql.auth.username Name for a custom user to create (overrides `auth.username`)
-## @param postgresql.global.postgresql.service.ports.postgresql PostgreSQL service port (overrides `service.ports.postgresql`)
 ## @param postgresql.primary.persistence.size PVC Storage Request for PostgreSQL volume
 postgresql:
   enabled: false
   global:
     postgresql:
       auth:
-        password: hedgedoc
-        database: hedgedoc
+        postgresPassword: changeme
         username: hedgedoc
-      service:
-        ports:
-          postgresql: 5432
+        password: changeme
+        database: hedgedoc
   primary:
     persistence:
       size: 10Gi
