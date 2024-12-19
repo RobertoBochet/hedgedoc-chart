@@ -351,25 +351,23 @@ hedgedoc:
 #
 ## @extra postgresql-ha PostgreSQL HA Bitnami chart values. Visit: [PostgreSQL HA chart docs](https://artifacthub.io/packages/helm/bitnami/postgresql-ha)
 ## @param postgresql-ha.enabled Enable PostgreSQL HA
-## @param postgresql-ha.global.postgresql.username Name for a custom user to create (overrides `auth.username`)
-## @param postgresql-ha.global.postgresql.password Password for the `hedgedoc` user (overrides `auth.password`)
-## @param postgresql-ha.global.postgresql.database Name for a custom database to create (overrides `auth.database`)
-## @param postgresql-ha.global.postgresql.repmgrPassword PostgreSQL repmgr password (overrides postgresql.repmgrpassword)
-## @param postgresql-ha.global.pgpool.adminPassword Pgpool Admin password (overrides pgpool.adminPassword)
+## @param postgresql-ha.postgresql.username Name for a custom user to create
+## @param postgresql-ha.postgresql.password Password for the `hedgedoc` user
+## @param postgresql-ha.postgresql.database Name for a custom database to create
 ## @param postgresql-ha.postgresql.postgresPassword PostgreSQL password for the postgres user when username is not postgres
+## @param postgresql-ha.postgresql.repmgrPassword PostgreSQL repmgr password
+## @param postgresql-ha.pgpool.adminPassword Pgpool Admin password
 ## @param postgresql-ha.persistence.size PVC Storage Request for PostgreSQL HA volume
 postgresql-ha:
   enabled: true
-  global:
-    postgresql:
-      username: hedgedoc
-      password: changeme
-      database: hedgedoc
-      repmgrPassword: changeme
-    pgpool:
-      adminPassword: changeme
   postgresql:
+    username: hedgedoc
+    password: changeme
+    database: hedgedoc
     postgresPassword: changeme
+    repmgrPassword: changeme
+  pgpool:
+    adminPassword: changeme
   persistence:
     size: 10Gi
 
@@ -377,20 +375,18 @@ postgresql-ha:
 #
 ## @extra postgresql-ha PostgreSQL Bitnami chart values. Visit: [PostgreSQL chart docs](https://artifacthub.io/packages/helm/bitnami/postgresql)
 ## @param postgresql.enabled Enable PostgreSQL
-## @param postgresql.global.postgresql.auth.postgresPassword Password for the "postgres" admin user (overrides auth.postgresPassword)
-## @param postgresql.global.postgresql.auth.username Name for a custom user to create (overrides `auth.username`)
-## @param postgresql.global.postgresql.auth.password Password for the `hedgedoc` user (overrides `auth.password`)
-## @param postgresql.global.postgresql.auth.database Name for a custom database to create (overrides `auth.database`)
+## @param postgresql.auth.postgresPassword Password for the "postgres" admin user
+## @param postgresql.auth.username Name for a custom user to create
+## @param postgresql.auth.password Password for the `hedgedoc` user
+## @param postgresql.auth.database Name for a custom database to create
 ## @param postgresql.primary.persistence.size PVC Storage Request for PostgreSQL volume
 postgresql:
   enabled: false
-  global:
-    postgresql:
-      auth:
-        postgresPassword: changeme
-        username: hedgedoc
-        password: changeme
-        database: hedgedoc
+  auth:
+    postgresPassword: changeme
+    username: hedgedoc
+    password: changeme
+    database: hedgedoc
   primary:
     persistence:
       size: 10Gi

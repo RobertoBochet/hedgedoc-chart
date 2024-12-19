@@ -23,15 +23,15 @@
 {{- $changeMeValues := list "hedgedoc.config.sessionSecret" -}}
 {{- if index .Values "postgresql-ha" "enabled" -}}
   {{- $changeMeValues = concat $changeMeValues (list
-                                "postgresql-ha.global.postgresql.password"
-                                "postgresql-ha.global.postgresql.repmgrPassword"
-                                "postgresql-ha.global.pgpool.adminPassword"
-                                "postgresql-ha.postgresql.postgresPassword") -}}
+                                "postgresql-ha.postgresql.password"
+                                "postgresql-ha.postgresql.postgresPassword"
+                                "postgresql-ha.postgresql.repmgrPassword"
+                                "postgresql-ha.pgpool.adminPassword") -}}
 {{- end -}}
 {{- if .Values.postgresql.enabled -}}
   {{- $changeMeValues = concat $changeMeValues (list
-                                "postgresql.global.postgresql.auth.postgresPassword"
-                                "postgresql.global.postgresql.auth.password") -}}
+                                "postgresql.auth.postgresPassword"
+                                "postgresql.auth.password") -}}
 {{- end -}}
 {{- range $changeMeValuePath := $changeMeValues -}}
   {{- $changeMeTpl := $changeMeValuePath | splitList "."  | join "\" \"" | printf "{{ index .Values \"%s\"}}" -}}

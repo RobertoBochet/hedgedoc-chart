@@ -119,18 +119,16 @@ app.kubernetes.io/instance: {{ .Release.Name }}
   {{- end }}
   {{- if not (.Values.hedgedoc.config.dbURL) -}}
     {{- if (index .Values "postgresql-ha" "enabled") -}}
-      {{- $_ := set .Values.hedgedoc.config "dbURL" (printf "postgres://%s:%s@%s/%s"
-                                              (index .Values "postgresql-ha" "global" "postgresql" "username")
-                                              (index .Values "postgresql-ha" "global" "postgresql" "password")
-                                              (include "postgresql-ha.dns" .)
-                                              (index .Values "postgresql-ha" "global" "postgresql" "database")) -}}
+      {{- $username := index .Values "postgresql-ha" "global" "postgresql" "username" | default (index .Values "postgresql-ha" "postgresql" "username") -}}
+      {{- $password := index .Values "postgresql-ha" "global" "postgresql" "password" | default (index .Values "postgresql-ha" "postgresql" "password") -}}
+      {{- $database := index .Values "postgresql-ha" "global" "postgresql" "database" | default (index .Values "postgresql-ha" "postgresql" "database") -}}
+      {{- $_ := set .Values.hedgedoc.config "dbURL" (printf "postgres://%s:%s@%s/%s" $username $password (include "postgresql-ha.dns" .) $database) -}}
     {{- end -}}
     {{- if (index .Values "postgresql" "enabled") -}}
-      {{- $_ := set .Values.hedgedoc.config "dbURL" (printf "postgres://%s:%s@%s/%s"
-                                              (index .Values "postgresql" "global" "postgresql" "auth" "username")
-                                              (index .Values "postgresql" "global" "postgresql" "auth" "password")
-                                              (include "postgresql.dns" .)
-                                              (index .Values "postgresql" "global" "postgresql" "auth" "database")) -}}
+      {{- $username := index .Values "postgresql" "global" "postgresql" "auth" "username" | default (index .Values "postgresql" "auth" "username") -}}
+      {{- $password := index .Values "postgresql" "global" "postgresql" "auth" "password" | default (index .Values "postgresql" "auth" "password") -}}
+      {{- $database := index .Values "postgresql" "global" "postgresql" "auth" "database" | default (index .Values "postgresql" "auth" "database") -}}
+      {{- $_ := set .Values.hedgedoc.config "dbURL" (printf "postgres://%s:%s@%s/%s" $username $password (include "postgresql.dns" .) $database) -}}
     {{- end -}}
   {{- end -}}
   {{- if and (eq .Values.hedgedoc.config.imageUploadType "filesystem") (not .Values.hedgedoc.config.uploadsPath) -}}
