@@ -18,10 +18,31 @@
   echo "Visit http://127.0.0.1:{{ .Values.service.http.port }} to use your application"
   kubectl --namespace {{ .Release.Namespace }} port-forward svc/{{ .Release.Name }}-http {{ .Values.service.http.port }}:{{ .Values.service.http.port }}
 {{- end }}
+
 {{- $warnings := list -}}
-{{- if eq .Values.hedgedoc.config.sessionSecret "changeme" -}}
-  {{- $warnings = append $warnings "You should change the `hedgedoc.config.sessionSecret` with a generated one" -}}
+{{- $changeMeValues := list "hedgedoc.config.sessionSecret" -}}
+{{- if index .Values "postgresql-ha" "enabled" -}}
+  {{- $changeMeValues = concat $changeMeValues (list
+                                "postgresql-ha.global.postgresql.password"
+                                "postgresql-ha.global.postgresql.repmgrPassword"
+                                "postgresql-ha.global.pgpool.adminPassword"
+                                "postgresql-ha.postgresql.postgresPassword") -}}
+{{- end -}}
+{{- if .Values.postgresql.enabled -}}
+  {{- $changeMeValues = concat $changeMeValues (list
+                                "postgresql.global.postgresql.auth.postgresPassword"
+                                "postgresql.global.postgresql.auth.password") -}}
+{{- end -}}
+{{- range $changeMeValuePath := $changeMeValues -}}
+  {{- $changeMeTpl := $changeMeValuePath | splitList "."  | join "\" \"" | printf "{{ index .Values \"%s\"}}" -}}
+  {{- $changeMeValue := tpl $changeMeTpl $ -}}
+  {{- if eq $changeMeValue "changeme" -}}
+    {{- $warnings = append $warnings (printf "You should change `%s`" $changeMeValuePath) -}}
+  {{- end }}
 {{- end }}
+{{- if and .Values.ingress.enabled .Values.ingress.tls (not .Values.hedgedoc.config.protocolUseSSL) -}}
+  {{- $warnings = append $warnings "You should set `hedgedoc.config.protocolUseSSL` to true if you use ingress with TLS" -}}
+{{- end -}}
 {{- if gt (len $warnings) 0 }}
 2. Review these warnings:
 {{- range $warnings }}
