@@ -215,7 +215,7 @@
 
 | Name                                  | Description                                                                                                              | Value      |
 | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | ---------- |
-| `postgresql-ha`                       | PostgreSQL Bitnami chart values. Visit: [PostgreSQL chart docs](https://artifacthub.io/packages/helm/bitnami/postgresql) |            |
+| `postgresql`                          | PostgreSQL Bitnami chart values. Visit: [PostgreSQL chart docs](https://artifacthub.io/packages/helm/bitnami/postgresql) |            |
 | `postgresql.enabled`                  | Enable PostgreSQL                                                                                                        | `false`    |
 | `postgresql.auth.postgresPassword`    | Password for the "postgres" admin user                                                                                   | `changeme` |
 | `postgresql.auth.username`            | Name for a custom user to create                                                                                         | `hedgedoc` |
@@ -231,3 +231,8 @@
 | `test.image.name` | Image name for the wget container used in the test-connection Pod. | `busybox` |
 | `test.image.tag`  | Image tag for the wget container used in the test-connection Pod.  | `latest`  |
 | `extraDeploy`     | Array of extra objects to deploy with the release                  | `[]`      |
+
+## Credits
+
+Chart is heavily based on [gitea](https://gitea.com/gitea/helm-chart) one.
+They worked great, so there is no need to reinvent the wheel.
