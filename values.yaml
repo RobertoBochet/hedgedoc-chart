@@ -254,7 +254,7 @@ extraContainerVolumeMounts: []
 ## @section HedgeDoc
 #
 hedgedoc:
-  ## @extra hedgedoc.config In this section only some available parameters are shown, but it is possible to set all HedgeDoc configuration options. Visit: [HedgeDoc docs](https://docs.hedgedoc.org/configuration/)
+  ## @extra hedgedoc.config This section will be mapped to HedgeDoc's config.json file. By default, only some basic configurations are present, but it is possible to add any other HedgeDoc configuration options. Visit [HedgeDoc docs](https://docs.hedgedoc.org/configuration/) for all the available options.
   ## @param hedgedoc.config.imageUploadType Where to upload images. Options are: filesystem, imgur, s3, minio, azure, lutim
   ## @param hedgedoc.config.domain Domain name
   ## @param hedgedoc.config.port Port to listen on
