@@ -1,0 +1,777 @@
+{
+    "title": "Chart Values",
+    "type": "object",
+    "properties": {
+        "global": {
+            "type": "object",
+            "properties": {
+                "imageRegistry": {
+                    "type": "string",
+                    "description": "global image registry override",
+                    "default": ""
+                },
+                "imagePullSecrets": {
+                    "type": "array",
+                    "description": "global image pull secrets override; can be extended by `imagePullSecrets`",
+                    "default": [],
+                    "items": {}
+                },
+                "storageClass": {
+                    "type": "string",
+                    "description": "global storage class override",
+                    "default": ""
+                },
+                "hostAliases": {
+                    "type": "array",
+                    "description": "global hostAliases which will be added to the pod's hosts files",
+                    "default": [],
+                    "items": {}
+                }
+            }
+        },
+        "namespace": {
+            "type": "string",
+            "description": "An explicit namespace to deploy hedgedoc into. Defaults to the release namespace if not specified",
+            "default": ""
+        },
+        "replicaCount": {
+            "type": "number",
+            "description": "number of replicas for the deployment",
+            "default": 1
+        },
+        "strategy": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "description": "strategy type",
+                    "default": "RollingUpdate"
+                },
+                "rollingUpdate": {
+                    "type": "object",
+                    "properties": {
+                        "maxSurge": {
+                            "type": "string",
+                            "description": "maxSurge",
+                            "default": "100%"
+                        },
+                        "maxUnavailable": {
+                            "type": "number",
+                            "description": "maxUnavailable",
+                            "default": 0
+                        }
+                    }
+                }
+            }
+        },
+        "clusterDomain": {
+            "type": "string",
+            "description": "cluster domain",
+            "default": "cluster.local"
+        },
+        "image": {
+            "type": "object",
+            "properties": {
+                "registry": {
+                    "type": "string",
+                    "description": "image registry, e.g. quay.io,gcr.io,docker.io",
+                    "default": "quay.io"
+                },
+                "repository": {
+                    "type": "string",
+                    "description": "Image to start for this pod",
+                    "default": "hedgedoc/hedgedoc"
+                },
+                "tag": {
+                    "type": "string",
+                    "description": "Visit: [Image tag](https://quay.io/repository/hedgedoc/hedgedoc?tab=tags). Defaults to `appVersion` within Chart.yaml.",
+                    "default": ""
+                },
+                "variant": {
+                    "type": "string",
+                    "description": "Image variant, e.g. `alpine`, `debian`",
+                    "default": ""
+                },
+                "digest": {
+                    "type": "string",
+                    "description": "Image digest. Allows to pin the given image tag. Useful for having control over mutable tags like `latest`",
+                    "default": ""
+                },
+                "pullPolicy": {
+                    "type": "string",
+                    "description": "Image pull policy",
+                    "default": "IfNotPresent"
+                },
+                "fullOverride": {
+                    "type": "string",
+                    "description": "Completely overrides the image registry, path/image, tag and digest",
+                    "default": ""
+                }
+            }
+        },
+        "imagePullSecrets": {
+            "type": "array",
+            "description": "Secret to use for pulling the image",
+            "default": [],
+            "items": {}
+        },
+        "podSecurityContext": {
+            "type": "object",
+            "properties": {
+                "fsGroup": {
+                    "type": "number",
+                    "description": "Set the shared file system group for all containers in the pod.",
+                    "default": 1000
+                }
+            }
+        },
+        "containerSecurityContext": {
+            "type": "object",
+            "description": "Security context",
+            "default": {}
+        },
+        "podDisruptionBudget": {
+            "type": "object",
+            "description": "Pod disruption budget",
+            "default": {}
+        },
+        "service": {
+            "type": "object",
+            "properties": {
+                "http": {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "description": "Kubernetes service type for web traffic",
+                            "default": "ClusterIP"
+                        },
+                        "port": {
+                            "type": "number",
+                            "description": "Port number for web traffic",
+                            "default": 3000
+                        },
+                        "clusterIP": {
+                            "type": "string",
+                            "description": "ClusterIP setting for http autosetup for deployment is None",
+                            "default": "None"
+                        },
+                        "nodePort": {
+                            "type": "string",
+                            "description": "NodePort for http service",
+                            "default": ""
+                        },
+                        "externalTrafficPolicy": {
+                            "type": "string",
+                            "description": "If `service.http.type` is `NodePort` or `LoadBalancer`, set this to `Local` to enable source IP preservation",
+                            "default": ""
+                        },
+                        "externalIPs": {
+                            "type": "array",
+                            "description": "External IPs for service",
+                            "default": [],
+                            "items": {}
+                        },
+                        "ipFamilyPolicy": {
+                            "type": "string",
+                            "description": "HTTP service dual-stack policy",
+                            "default": ""
+                        },
+                        "ipFamilies": {
+                            "type": "array",
+                            "description": "HTTP service dual-stack familiy selection,for dual-stack parameters see official kubernetes [dual-stack concept documentation](https://kubernetes.io/docs/concepts/services-networking/dual-stack/).",
+                            "default": [],
+                            "items": {}
+                        },
+                        "loadBalancerSourceRanges": {
+                            "type": "array",
+                            "description": "Source range filter for http loadbalancer",
+                            "default": [],
+                            "items": {}
+                        },
+                        "annotations": {
+                            "type": "object",
+                            "description": "HTTP service annotations",
+                            "default": {}
+                        },
+                        "labels": {
+                            "type": "object",
+                            "description": "HTTP service additional labels",
+                            "default": {}
+                        },
+                        "loadBalancerClass": {
+                            "type": "string",
+                            "description": "Loadbalancer class",
+                            "default": ""
+                        }
+                    }
+                }
+            }
+        },
+        "ingress": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "description": "Enable ingress",
+                    "default": true
+                },
+                "className": {
+                    "type": "string",
+                    "description": "Ingress class name",
+                    "default": ""
+                },
+                "annotations": {
+                    "type": "object",
+                    "description": "Ingress annotations",
+                    "default": {}
+                },
+                "hosts": {
+                    "type": "array",
+                    "description": "Default Ingress host",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "host": {
+                                "type": "string",
+                                "description": "Default Ingress host"
+                            },
+                            "paths": {
+                                "type": "array",
+                                "description": "Default Ingress path",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "path": {
+                                            "type": "string",
+                                            "description": "Default Ingress path"
+                                        },
+                                        "pathType": {
+                                            "type": "string",
+                                            "description": "Ingress path type"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tls": {
+                    "type": "array",
+                    "description": "Ingress tls settings",
+                    "default": [],
+                    "items": {}
+                }
+            }
+        },
+        "resources": {
+            "type": "object",
+            "description": "Kubernetes resources",
+            "default": {}
+        },
+        "schedulerName": {
+            "type": "string",
+            "description": "Use an alternate scheduler, e.g. \"stork\"",
+            "default": ""
+        },
+        "nodeSelector": {
+            "type": "object",
+            "description": "NodeSelector for the deployment",
+            "default": {}
+        },
+        "tolerations": {
+            "type": "array",
+            "description": "Tolerations for the deployment",
+            "default": [],
+            "items": {}
+        },
+        "affinity": {
+            "type": "object",
+            "description": "Affinity for the deployment",
+            "default": {}
+        },
+        "topologySpreadConstraints": {
+            "type": "array",
+            "description": "TopologySpreadConstraints for the deployment",
+            "default": [],
+            "items": {}
+        },
+        "dnsConfig": {
+            "type": "object",
+            "description": "dnsConfig for the deployment",
+            "default": {}
+        },
+        "priorityClassName": {
+            "type": "string",
+            "description": "priorityClassName for the deployment",
+            "default": ""
+        },
+        "deployment": {
+            "type": "object",
+            "properties": {
+                "terminationGracePeriodSeconds": {
+                    "type": "number",
+                    "description": "How long to wait until forcefully kill the pod",
+                    "default": 60
+                },
+                "labels": {
+                    "type": "object",
+                    "description": "Labels for the deployment",
+                    "default": {}
+                },
+                "annotations": {
+                    "type": "object",
+                    "description": "Annotations for the Gitea deployment to be created",
+                    "default": {}
+                }
+            }
+        },
+        "serviceAccount": {
+            "type": "object",
+            "properties": {
+                "create": {
+                    "type": "boolean",
+                    "description": "Enable the creation of a ServiceAccount",
+                    "default": false
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Name of the created ServiceAccount, defaults to release name. Can also link to an externally provided ServiceAccount that should be used.",
+                    "default": ""
+                },
+                "automountServiceAccountToken": {
+                    "type": "boolean",
+                    "description": "Enable/disable auto mounting of the service account token",
+                    "default": false
+                },
+                "imagePullSecrets": {
+                    "type": "array",
+                    "description": "Image pull secrets, available to the ServiceAccount",
+                    "default": [],
+                    "items": {}
+                },
+                "annotations": {
+                    "type": "object",
+                    "description": "Custom annotations for the ServiceAccount",
+                    "default": {}
+                },
+                "labels": {
+                    "type": "object",
+                    "description": "Custom labels for the ServiceAccount",
+                    "default": {}
+                }
+            }
+        },
+        "persistence": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "description": "Enable persistent storage",
+                    "default": true
+                },
+                "create": {
+                    "type": "boolean",
+                    "description": "Whether to create the persistentVolumeClaim for shared storage",
+                    "default": true
+                },
+                "mount": {
+                    "type": "boolean",
+                    "description": "Whether the persistentVolumeClaim should be mounted (even if not created)",
+                    "default": true
+                },
+                "claimName": {
+                    "type": "string",
+                    "description": "Use an existing claim to store repository information",
+                    "default": "hedgedoc-storage"
+                },
+                "size": {
+                    "type": "string",
+                    "description": "Size for persistence to store repo information",
+                    "default": "10Gi"
+                },
+                "accessModes": {
+                    "type": "array",
+                    "description": "AccessMode for persistence",
+                    "default": [
+                        "ReadWriteOnce"
+                    ],
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "labels": {
+                    "type": "object",
+                    "description": "Labels for the persistence volume claim to be created",
+                    "default": {}
+                },
+                "storageClass": {
+                    "type": "string",
+                    "description": "Name of the storage class to use",
+                    "default": ""
+                },
+                "subPath": {
+                    "type": "string",
+                    "description": "Subdirectory of the volume to mount at",
+                    "default": ""
+                },
+                "volumeName": {
+                    "type": "string",
+                    "description": "Name of persistent volume in PVC",
+                    "default": ""
+                }
+            }
+        },
+        "extraContainers": {
+            "type": "array",
+            "description": "Additional sidecar containers to run in the pod",
+            "default": [],
+            "items": {}
+        },
+        "extraVolumes": {
+            "type": "array",
+            "description": "Additional volumes to mount to the Gitea deployment",
+            "default": [],
+            "items": {}
+        },
+        "extraContainerVolumeMounts": {
+            "type": "array",
+            "description": "Mounts that are only mapped into the Gitea runtime/main container, to e.g. override custom templates.",
+            "default": [],
+            "items": {}
+        },
+        "hedgedoc": {
+            "type": "object",
+            "properties": {
+                "config": {
+                    "type": "object",
+                    "properties": {
+                        "imageUploadType": {
+                            "type": "string",
+                            "description": "Where to upload images. Options are: filesystem, imgur, s3, minio, azure, lutim",
+                            "default": "filesystem"
+                        },
+                        "domain": {
+                            "type": "string",
+                            "description": "Domain name",
+                            "default": ""
+                        },
+                        "port": {
+                            "type": "number",
+                            "description": "Port to listen on",
+                            "default": 3000
+                        },
+                        "protocolUseSSL": {
+                            "type": "boolean",
+                            "description": "`true` if you want to serve your instance over SSL (HTTPS), `false` if you want to use plain HTTP. If the ingress uses TLS, it should be set to `true`",
+                            "default": false
+                        },
+                        "allowAnonymous": {
+                            "type": "boolean",
+                            "description": "Set to allow anonymous usage",
+                            "default": true
+                        },
+                        "allowAnonymousEdits": {
+                            "type": "boolean",
+                            "description": "If allowAnonymous is false: allow users to select freely permission, allowing guests to edit existing notes",
+                            "default": false
+                        },
+                        "allowFreeURL": {
+                            "type": "boolean",
+                            "description": "Set to allow new note creation by accessing a nonexistent note URL. This is the behavior familiar from Etherpad",
+                            "default": false
+                        },
+                        "requireFreeURLAuthentication": {
+                            "type": "boolean",
+                            "description": "Set to require authentication for FreeURL mode style note creation",
+                            "default": false
+                        },
+                        "defaultPermission": {
+                            "type": "string",
+                            "description": "Set notes default permission (only applied on signed-in users).",
+                            "default": "editable"
+                        },
+                        "sessionSecret": {
+                            "type": "string",
+                            "description": "Cookie session secret used to sign the session cookie. If none is set, one will randomly generated on each startup, meaning all your users will be logged out. Can be generated with e.g. pwgen -s 64 1",
+                            "default": "changeme"
+                        },
+                        "email": {
+                            "type": "boolean",
+                            "description": "Set to allow email sign-in",
+                            "default": true
+                        },
+                        "allowEmailRegister": {
+                            "type": "boolean",
+                            "description": "Set to allow registration of new accounts using an email address. If set to false, you can still create accounts using the command line. This setting has no effect if hedgedoc.config.email is false",
+                            "default": true
+                        }
+                    }
+                },
+                "additionalConfigSources": {
+                    "type": "array",
+                    "description": "Additional configuration from secret or configmap",
+                    "default": [],
+                    "items": {}
+                },
+                "additionalConfigFromEnvs": {
+                    "type": "array",
+                    "description": "Additional configuration sources from environment variables",
+                    "default": [],
+                    "items": {}
+                },
+                "podAnnotations": {
+                    "type": "object",
+                    "description": "Annotations for the Gitea pod",
+                    "default": {}
+                },
+                "livenessProbe": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "Enable liveness probe",
+                            "default": true
+                        },
+                        "initialDelaySeconds": {
+                            "type": "number",
+                            "description": "Initial delay before liveness probe is initiated",
+                            "default": 200
+                        },
+                        "timeoutSeconds": {
+                            "type": "number",
+                            "description": "Timeout for liveness probe",
+                            "default": 1
+                        },
+                        "periodSeconds": {
+                            "type": "number",
+                            "description": "Period for liveness probe",
+                            "default": 10
+                        },
+                        "successThreshold": {
+                            "type": "number",
+                            "description": "Success threshold for liveness probe",
+                            "default": 1
+                        },
+                        "failureThreshold": {
+                            "type": "number",
+                            "description": "Failure threshold for liveness probe",
+                            "default": 10
+                        }
+                    }
+                },
+                "readinessProbe": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "Enable readiness probe",
+                            "default": true
+                        },
+                        "initialDelaySeconds": {
+                            "type": "number",
+                            "description": "Initial delay before readiness probe is initiated",
+                            "default": 5
+                        },
+                        "timeoutSeconds": {
+                            "type": "number",
+                            "description": "Timeout for readiness probe",
+                            "default": 1
+                        },
+                        "periodSeconds": {
+                            "type": "number",
+                            "description": "Period for readiness probe",
+                            "default": 10
+                        },
+                        "successThreshold": {
+                            "type": "number",
+                            "description": "Success threshold for readiness probe",
+                            "default": 1
+                        },
+                        "failureThreshold": {
+                            "type": "number",
+                            "description": "Failure threshold for readiness probe",
+                            "default": 3
+                        }
+                    }
+                },
+                "startupProbe": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "Enable startup probe",
+                            "default": false
+                        },
+                        "initialDelaySeconds": {
+                            "type": "number",
+                            "description": "Initial delay before startup probe is initiated",
+                            "default": 60
+                        },
+                        "timeoutSeconds": {
+                            "type": "number",
+                            "description": "Timeout for startup probe",
+                            "default": 1
+                        },
+                        "periodSeconds": {
+                            "type": "number",
+                            "description": "Period for startup probe",
+                            "default": 10
+                        },
+                        "successThreshold": {
+                            "type": "number",
+                            "description": "Success threshold for startup probe",
+                            "default": 1
+                        },
+                        "failureThreshold": {
+                            "type": "number",
+                            "description": "Failure threshold for startup probe",
+                            "default": 10
+                        }
+                    }
+                }
+            }
+        },
+        "postgresql-ha": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "description": "Enable PostgreSQL HA",
+                    "default": true
+                },
+                "postgresql": {
+                    "type": "object",
+                    "properties": {
+                        "username": {
+                            "type": "string",
+                            "description": "Name for a custom user to create",
+                            "default": "hedgedoc"
+                        },
+                        "password": {
+                            "type": "string",
+                            "description": "Password for the `hedgedoc` user",
+                            "default": "changeme"
+                        },
+                        "database": {
+                            "type": "string",
+                            "description": "Name for a custom database to create",
+                            "default": "hedgedoc"
+                        },
+                        "postgresPassword": {
+                            "type": "string",
+                            "description": "PostgreSQL password for the postgres user when username is not postgres",
+                            "default": "changeme"
+                        },
+                        "repmgrPassword": {
+                            "type": "string",
+                            "description": "PostgreSQL repmgr password",
+                            "default": "changeme"
+                        }
+                    }
+                },
+                "pgpool": {
+                    "type": "object",
+                    "properties": {
+                        "adminPassword": {
+                            "type": "string",
+                            "description": "Pgpool Admin password",
+                            "default": "changeme"
+                        }
+                    }
+                },
+                "persistence": {
+                    "type": "object",
+                    "properties": {
+                        "size": {
+                            "type": "string",
+                            "description": "PVC Storage Request for PostgreSQL HA volume",
+                            "default": "10Gi"
+                        }
+                    }
+                }
+            }
+        },
+        "postgresql": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "description": "Enable PostgreSQL",
+                    "default": false
+                },
+                "auth": {
+                    "type": "object",
+                    "properties": {
+                        "postgresPassword": {
+                            "type": "string",
+                            "description": "Password for the \"postgres\" admin user",
+                            "default": "changeme"
+                        },
+                        "username": {
+                            "type": "string",
+                            "description": "Name for a custom user to create",
+                            "default": "hedgedoc"
+                        },
+                        "password": {
+                            "type": "string",
+                            "description": "Password for the `hedgedoc` user",
+                            "default": "changeme"
+                        },
+                        "database": {
+                            "type": "string",
+                            "description": "Name for a custom database to create",
+                            "default": "hedgedoc"
+                        }
+                    }
+                },
+                "primary": {
+                    "type": "object",
+                    "properties": {
+                        "persistence": {
+                            "type": "object",
+                            "properties": {
+                                "size": {
+                                    "type": "string",
+                                    "description": "PVC Storage Request for PostgreSQL volume",
+                                    "default": "10Gi"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "test": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean",
+                    "description": "Set it to false to disable test-connection Pod.",
+                    "default": true
+                },
+                "image": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string",
+                            "description": "Image name for the wget container used in the test-connection Pod.",
+                            "default": "busybox"
+                        },
+                        "tag": {
+                            "type": "string",
+                            "description": "Image tag for the wget container used in the test-connection Pod.",
+                            "default": "latest"
+                        }
+                    }
+                }
+            }
+        },
+        "extraDeploy": {
+            "type": "array",
+            "description": "Array of extra objects to deploy with the release",
+            "default": [],
+            "items": {}
+        }
+    }
+}

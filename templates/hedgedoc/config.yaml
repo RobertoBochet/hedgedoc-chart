@@ -1,0 +1,12 @@
+{{- include "hedgedoc.config.init" . }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "hedgedoc.fullname" . }}
+  namespace: {{ .Values.namespace | default .Release.Namespace }}
+  labels:
+    {{- include "hedgedoc.labels" . | nindent 4 }}
+type: Opaque
+stringData:
+  config.json: |
+    {{- dict "production" .Values.hedgedoc.config | toPrettyJson | nindent 4 }}

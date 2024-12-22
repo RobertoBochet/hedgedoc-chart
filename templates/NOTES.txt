@@ -1,0 +1,54 @@
+1. Get the application URL by running these commands:
+{{- if .Values.ingress.enabled }}
+{{- range $host := .Values.ingress.hosts }}
+  {{- range .paths }}
+  http{{ if $.Values.ingress.tls }}s{{ end }}://{{ $host.host }}{{ .path }}
+  {{- end }}
+{{- end }}
+{{- else if contains "NodePort" .Values.service.http.type }}
+  export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "hedgedoc.fullname" . }})
+  export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
+  echo http://$NODE_IP:$NODE_PORT
+{{- else if contains "LoadBalancer" .Values.service.http.type }}
+     NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+           You can watch the status of by running 'kubectl get --namespace {{ .Release.Namespace }} svc -w {{ include "hedgedoc.fullname" . }}'
+  export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ include "hedgedoc.fullname" . }} --template "{{"{{ range (index .status.loadBalancer.ingress 0) }}{{.}}{{ end }}"}}")
+  echo http://$SERVICE_IP:{{ .Values.service.port }}
+{{- else if contains "ClusterIP" .Values.service.http.type }}
+  echo "Visit http://127.0.0.1:{{ .Values.service.http.port }} to use your application"
+  kubectl --namespace {{ .Release.Namespace }} port-forward svc/{{ .Release.Name }}-http {{ .Values.service.http.port }}:{{ .Values.service.http.port }}
+{{- end }}
+
+{{- $warnings := list -}}
+{{- $changeMeValues := list "hedgedoc.config.sessionSecret" -}}
+{{- if index .Values "postgresql-ha" "enabled" -}}
+  {{- $changeMeValues = concat $changeMeValues (list
+                                "postgresql-ha.postgresql.password"
+                                "postgresql-ha.postgresql.postgresPassword"
+                                "postgresql-ha.postgresql.repmgrPassword"
+                                "postgresql-ha.pgpool.adminPassword") -}}
+{{- end -}}
+{{- if .Values.postgresql.enabled -}}
+  {{- $changeMeValues = concat $changeMeValues (list
+                                "postgresql.auth.postgresPassword"
+                                "postgresql.auth.password") -}}
+{{- end -}}
+{{- range $changeMeValuePath := $changeMeValues -}}
+  {{- $changeMeTpl := $changeMeValuePath | splitList "."  | join "\" \"" | printf "{{ index .Values \"%s\"}}" -}}
+  {{- $changeMeValue := tpl $changeMeTpl $ -}}
+  {{- if eq $changeMeValue "changeme" -}}
+    {{- $warnings = append $warnings (printf "You should change `%s`" $changeMeValuePath) -}}
+  {{- end }}
+{{- end }}
+{{- if and .Values.ingress.enabled (not .Values.hedgedoc.config.domain) -}}
+  {{- $warnings = append $warnings "You should set `hedgedoc.config.domain` if you use ingress" -}}
+{{- end -}}
+{{- if and .Values.ingress.enabled .Values.ingress.tls (not .Values.hedgedoc.config.protocolUseSSL) -}}
+  {{- $warnings = append $warnings "You should set `hedgedoc.config.protocolUseSSL` to true if you use ingress with TLS" -}}
+{{- end -}}
+{{- if gt (len $warnings) 0 }}
+2. Review these warnings:
+{{- range $warnings }}
+  - {{ . }}
+{{- end }}
+{{- end }}

@@ -1,0 +1,153 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "hedgedoc.fullname" . }}
+  namespace: {{ .Values.namespace | default .Release.Namespace }}
+  annotations:
+    {{- if .Values.deployment.annotations }}
+    {{- toYaml .Values.deployment.annotations | nindent 4 }}
+    {{- end }}
+  labels:
+    {{- include "hedgedoc.labels" . | nindent 4 }}
+    {{- if .Values.deployment.labels }}
+    {{- toYaml .Values.deployment.labels | nindent 4 }}
+    {{- end }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: {{ .Values.strategy.type }}
+    {{- if eq .Values.strategy.type "RollingUpdate" }}
+    rollingUpdate:
+      maxUnavailable: {{ .Values.strategy.rollingUpdate.maxUnavailable }}
+      maxSurge: {{ .Values.strategy.rollingUpdate.maxSurge }}
+    {{- end }}
+  selector:
+    matchLabels:
+      {{- include "hedgedoc.selectorLabels" . | nindent 6 }}
+      {{- if .Values.deployment.labels }}
+      {{- toYaml .Values.deployment.labels | nindent 6 }}
+      {{- end }}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/hedgedoc/config.yaml") . | sha256sum }}
+        {{- with .Values.hedgedoc.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      labels:
+        {{- include "hedgedoc.labels" . | nindent 8 }}
+        {{- if .Values.deployment.labels }}
+        {{- toYaml .Values.deployment.labels | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- if .Values.schedulerName }}
+      schedulerName: "{{ .Values.schedulerName }}"
+      {{- end }}
+      {{- if (or .Values.serviceAccount.create .Values.serviceAccount.name) }}
+      serviceAccountName: {{ include "hedgedoc.serviceAccountName" . }}
+      {{- end }}
+      {{- if .Values.priorityClassName }}
+      priorityClassName: "{{ .Values.priorityClassName }}"
+      {{- end }}
+      {{- include "hedgedoc.images.pullSecrets" . | nindent 6 }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ include "hedgedoc.image" . }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: CMD_CONFIG_FILE
+              value: /config/config.json
+            {{- if .Values.hedgedoc.additionalConfigFromEnvs }}
+            {{- toYaml .Values.hedgedoc.additionalConfigFromEnvs | nindent 12 }}
+            {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.hedgedoc.config.port }}
+          {{- if .Values.hedgedoc.livenessProbe.enabled }}
+          livenessProbe:
+            {{- include "hedgedoc.deployment.probe" .Values.hedgedoc.livenessProbe | nindent 12 }}
+          {{- end }}
+          {{- if .Values.hedgedoc.readinessProbe.enabled }}
+          readinessProbe:
+            {{- include "hedgedoc.deployment.probe" .Values.hedgedoc.readinessProbe | nindent 12 }}
+          {{- end }}
+          {{- if .Values.hedgedoc.startupProbe.enabled }}
+          startupProbe:
+            {{- include "hedgedoc.deployment.probe" .Values.hedgedoc.startupProbe | nindent 12 }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          {{- if .Values.containerSecurityContext -}}
+          securityContext:
+            {{ toYaml .Values.containerSecurityContext | nindent 12 -}}
+          {{- end }}
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: temp
+              mountPath: /tmp
+            - name: data
+              mountPath: /data
+              {{- if .Values.persistence.subPath }}
+              subPath: {{ .Values.persistence.subPath }}
+              {{- end }}
+            {{- range $idx, $value := .Values.hedgedoc.additionalConfigSources }}
+            - name: additional-config-sources-{{ $idx }}
+              mountPath: $value.mountPath
+            {{- end }}
+            {{- include "hedgedoc.container-additional-mounts" . | nindent 12 }}
+        {{- if .Values.extraContainers }}
+        {{- toYaml .Values.extraContainers | nindent 8 }}
+        {{- end }}
+      {{- with .Values.global.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- if .Values.dnsConfig }}
+      dnsConfig:
+        {{- toYaml .Values.dnsConfig | nindent 8 }}
+    {{- end }}
+      volumes:
+        - name: config
+          secret:
+            secretName: {{ include "hedgedoc.fullname" . }}
+            defaultMode: 110
+        {{- if gt (len .Values.extraVolumes) 0 }}
+        {{- toYaml .Values.extraVolumes | nindent 8 }}
+        {{- end }}
+        {{- range $idx, $value := .Values.hedgedoc.additionalConfigSources }}
+        {{- $value := unset $value "mountPath" -}}
+        - name: additional-config-sources-{{ $idx }}
+          {{- toYaml $value | nindent 10 }}
+        {{- end }}
+        - name: temp
+          emptyDir: {}
+  {{- if .Values.persistence.enabled }}
+    {{- if .Values.persistence.mount }}
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.claimName }}
+    {{- end }}
+  {{- else if not .Values.persistence.enabled }}
+        - name: data
+          emptyDir: {}
+  {{- end }}

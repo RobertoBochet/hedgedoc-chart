@@ -1,0 +1,406 @@
+# Default values for hedgedoc.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+## @section Global
+#
+## @param global.imageRegistry global image registry override
+## @param global.imagePullSecrets global image pull secrets override; can be extended by `imagePullSecrets`
+## @param global.storageClass global storage class override
+## @param global.hostAliases global hostAliases which will be added to the pod's hosts files
+global:
+  imageRegistry: ""
+  ## E.g.
+  ## imagePullSecrets:
+  ##   - myRegistryKeySecretName
+  ##
+  imagePullSecrets: []
+  storageClass: ""
+  hostAliases: []
+  # - ip: 192.168.137.2
+  #   hostnames:
+  #   - example.com
+
+## @param namespace An explicit namespace to deploy hedgedoc into. Defaults to the release namespace if not specified
+namespace: ""
+
+## @param replicaCount number of replicas for the deployment
+replicaCount: 1
+
+## @section strategy
+## @param strategy.type strategy type
+## @param strategy.rollingUpdate.maxSurge maxSurge
+## @param strategy.rollingUpdate.maxUnavailable maxUnavailable
+strategy:
+  type: "RollingUpdate"
+  rollingUpdate:
+    maxSurge: "100%"
+    maxUnavailable: 0
+
+## @param clusterDomain cluster domain
+clusterDomain: cluster.local
+
+## @section Image
+## @param image.registry image registry, e.g. quay.io,gcr.io,docker.io
+## @param image.repository Image to start for this pod
+## @param image.tag Visit: [Image tag](https://quay.io/repository/hedgedoc/hedgedoc?tab=tags). Defaults to `appVersion` within Chart.yaml.
+## @param image.variant Image variant, e.g. `alpine`, `debian`
+## @param image.digest Image digest. Allows to pin the given image tag. Useful for having control over mutable tags like `latest`
+## @param image.pullPolicy Image pull policy
+## @param image.fullOverride Completely overrides the image registry, path/image, tag and digest
+image:
+  registry: "quay.io"
+  repository: hedgedoc/hedgedoc
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+  variant: ""
+  digest: ""
+  pullPolicy: IfNotPresent
+  fullOverride: ""
+
+## @param imagePullSecrets Secret to use for pulling the image
+imagePullSecrets: []
+
+## @section Security
+# Security context is only usable with rootless image due to image design
+## @param podSecurityContext.fsGroup Set the shared file system group for all containers in the pod.
+podSecurityContext:
+  fsGroup: 1000
+
+## @param containerSecurityContext Security context
+containerSecurityContext: {}
+#   allowPrivilegeEscalation: false
+#   capabilities:
+#     drop:
+#       - ALL
+#     add:
+#       - SYS_CHROOT
+#   privileged: false
+#   readOnlyRootFilesystem: true
+#   runAsGroup: 1000
+#   runAsNonRoot: true
+#   runAsUser: 1000
+
+## @param podDisruptionBudget Pod disruption budget
+podDisruptionBudget: {}
+#  maxUnavailable: 1
+#  minAvailable: 1
+
+## @section Service
+service:
+  ## @param service.http.type Kubernetes service type for web traffic
+  ## @param service.http.port Port number for web traffic
+  ## @param service.http.clusterIP ClusterIP setting for http autosetup for deployment is None
+  ## @param service.http.nodePort NodePort for http service
+  ## @param service.http.externalTrafficPolicy If `service.http.type` is `NodePort` or `LoadBalancer`, set this to `Local` to enable source IP preservation
+  ## @param service.http.externalIPs External IPs for service
+  ## @param service.http.ipFamilyPolicy HTTP service dual-stack policy
+  ## @param service.http.ipFamilies HTTP service dual-stack familiy selection,for dual-stack parameters see official kubernetes [dual-stack concept documentation](https://kubernetes.io/docs/concepts/services-networking/dual-stack/).
+  ## @param service.http.loadBalancerSourceRanges Source range filter for http loadbalancer
+  ## @param service.http.annotations HTTP service annotations
+  ## @param service.http.labels HTTP service additional labels
+  ## @param service.http.loadBalancerClass Loadbalancer class
+  http:
+    type: ClusterIP
+    port: 3000
+    clusterIP: None
+    nodePort: ""
+    externalTrafficPolicy: ""
+    externalIPs: []
+    ipFamilyPolicy: ""
+    ipFamilies: []
+    loadBalancerSourceRanges: []
+    annotations: {}
+    labels: {}
+    loadBalancerClass: ""
+
+## @section Ingress
+## @param ingress.enabled Enable ingress
+## @param ingress.className Ingress class name
+## @param ingress.annotations Ingress annotations
+## @param ingress.hosts[0].host Default Ingress host
+## @param ingress.hosts[0].paths[0].path Default Ingress path
+## @param ingress.hosts[0].paths[0].pathType Ingress path type
+## @param ingress.tls Ingress tls settings
+## @extra ingress.apiVersion Specify APIVersion of ingress object. Mostly would only be used for argocd.
+ingress:
+  enabled: true
+  # className: nginx
+  className: ""
+  annotations:
+    {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: hedgedoc.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - hedgedoc.example.com
+  # Mostly for argocd or any other CI that uses `helm template | kubectl apply` or similar
+  # If helm doesn't correctly detect your ingress API version you can set it here.
+  # apiVersion: networking.k8s.io/v1
+
+## @section deployment
+#
+## @param resources Kubernetes resources
+resources:
+  {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+## Use an alternate scheduler, e.g. "stork".
+## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
+##
+## @param schedulerName Use an alternate scheduler, e.g. "stork"
+schedulerName: ""
+
+## @param nodeSelector NodeSelector for the deployment
+nodeSelector: {}
+
+## @param tolerations Tolerations for the deployment
+tolerations: []
+
+## @param affinity Affinity for the deployment
+affinity: {}
+
+## @param topologySpreadConstraints TopologySpreadConstraints for the deployment
+topologySpreadConstraints: []
+
+## @param dnsConfig dnsConfig for the deployment
+dnsConfig: {}
+
+## @param priorityClassName priorityClassName for the deployment
+priorityClassName: ""
+
+## @param deployment.terminationGracePeriodSeconds How long to wait until forcefully kill the pod
+## @param deployment.labels Labels for the deployment
+## @param deployment.annotations Annotations for the Gitea deployment to be created
+deployment:
+  terminationGracePeriodSeconds: 60
+  labels: {}
+  annotations: {}
+
+## @section ServiceAccount
+#
+## @param serviceAccount.create Enable the creation of a ServiceAccount
+## @param serviceAccount.name Name of the created ServiceAccount, defaults to release name. Can also link to an externally provided ServiceAccount that should be used.
+## @param serviceAccount.automountServiceAccountToken Enable/disable auto mounting of the service account token
+## @param serviceAccount.imagePullSecrets Image pull secrets, available to the ServiceAccount
+## @param serviceAccount.annotations Custom annotations for the ServiceAccount
+## @param serviceAccount.labels Custom labels for the ServiceAccount
+serviceAccount:
+  create: false
+  name: ""
+  automountServiceAccountToken: false
+  imagePullSecrets: []
+  # - name: private-registry-access
+  annotations: {}
+  labels: {}
+
+## @section Persistence
+#
+## @param persistence.enabled Enable persistent storage
+## @param persistence.create Whether to create the persistentVolumeClaim for shared storage
+## @param persistence.mount Whether the persistentVolumeClaim should be mounted (even if not created)
+## @param persistence.claimName Use an existing claim to store repository information
+## @param persistence.size Size for persistence to store repo information
+## @param persistence.accessModes AccessMode for persistence
+## @param persistence.labels Labels for the persistence volume claim to be created
+## @param persistence.annotations.helm.sh/resource-policy Resource policy for the persistence volume claim
+## @param persistence.storageClass Name of the storage class to use
+## @param persistence.subPath Subdirectory of the volume to mount at
+## @param persistence.volumeName Name of persistent volume in PVC
+persistence:
+  enabled: true
+  create: true
+  mount: true
+  claimName: hedgedoc-storage
+  size: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  labels: {}
+  storageClass: ""
+  subPath: ""
+  volumeName: ""
+  annotations:
+    helm.sh/resource-policy: keep
+
+## @param extraContainers Additional sidecar containers to run in the pod
+extraContainers: []
+#  - name: sidecar-bob
+#    image: busybox
+#    command: [/bin/sh, -c, 'echo "Hello world"; sleep 86400']
+
+## @param extraVolumes Additional volumes to mount to the Gitea deployment
+extraVolumes: []
+# - name: postgres-ssl-vol
+#   secret:
+#     secretName: hedgedoc-postgres-ssl
+
+## @param extraContainerVolumeMounts Mounts that are only mapped into the Gitea runtime/main container, to e.g. override custom templates.
+extraContainerVolumeMounts: []
+
+## @section HedgeDoc
+#
+hedgedoc:
+  ## @extra hedgedoc.config This section will be mapped to HedgeDoc's config.json file. By default, only some basic configurations are present, but it is possible to add any other HedgeDoc configuration options. Visit [HedgeDoc docs](https://docs.hedgedoc.org/configuration/) for all the available options.
+  ## @param hedgedoc.config.imageUploadType Where to upload images. Options are: filesystem, imgur, s3, minio, azure, lutim
+  ## @param hedgedoc.config.domain Domain name
+  ## @param hedgedoc.config.port Port to listen on
+  ## @param hedgedoc.config.protocolUseSSL `true` if you want to serve your instance over SSL (HTTPS), `false` if you want to use plain HTTP. If the ingress uses TLS, it should be set to `true`
+  ## @param hedgedoc.config.allowAnonymous Set to allow anonymous usage
+  ## @param hedgedoc.config.allowAnonymousEdits If allowAnonymous is false: allow users to select freely permission, allowing guests to edit existing notes
+  ## @param hedgedoc.config.allowFreeURL Set to allow new note creation by accessing a nonexistent note URL. This is the behavior familiar from Etherpad
+  ## @param hedgedoc.config.requireFreeURLAuthentication Set to require authentication for FreeURL mode style note creation
+  ## @param hedgedoc.config.defaultPermission Set notes default permission (only applied on signed-in users).
+  ## @param hedgedoc.config.sessionSecret Cookie session secret used to sign the session cookie. If none is set, one will randomly generated on each startup, meaning all your users will be logged out. Can be generated with e.g. pwgen -s 64 1
+  ## @param hedgedoc.config.email Set to allow email sign-in
+  ## @param hedgedoc.config.allowEmailRegister Set to allow registration of new accounts using an email address. If set to false, you can still create accounts using the command line. This setting has no effect if hedgedoc.config.email is false
+  config:
+    imageUploadType: "filesystem"
+    domain: ""
+    port: 3000
+    protocolUseSSL: false
+    allowAnonymous: true
+    allowAnonymousEdits: false
+    allowFreeURL: false
+    requireFreeURLAuthentication: false
+    defaultPermission: editable
+    sessionSecret: "changeme"
+    email: true
+    allowEmailRegister: true
+
+  ## @param hedgedoc.additionalConfigSources Additional configuration from secret or configmap
+  additionalConfigSources: []
+  #   - secret:
+  #       secretName: hedgedoc-ssl
+  #       mountPath: /certs
+  #   - configMap:
+  #       name: hedgedoc-default-note
+  #       mountPath: /config/default
+
+  ## @param hedgedoc.additionalConfigFromEnvs Additional configuration sources from environment variables
+  additionalConfigFromEnvs: []
+
+  ## @param hedgedoc.podAnnotations Annotations for the Gitea pod
+  podAnnotations: {}
+
+  ## @section LivenessProbe
+  #
+  ## @param hedgedoc.livenessProbe.enabled Enable liveness probe
+  ## @param hedgedoc.livenessProbe.initialDelaySeconds Initial delay before liveness probe is initiated
+  ## @param hedgedoc.livenessProbe.timeoutSeconds Timeout for liveness probe
+  ## @param hedgedoc.livenessProbe.periodSeconds Period for liveness probe
+  ## @param hedgedoc.livenessProbe.successThreshold Success threshold for liveness probe
+  ## @param hedgedoc.livenessProbe.failureThreshold Failure threshold for liveness probe
+  # Modify the liveness probe for your needs or completely disable it by commenting out.
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 200
+    timeoutSeconds: 1
+    periodSeconds: 10
+    successThreshold: 1
+    failureThreshold: 10
+
+  ## @section ReadinessProbe
+  #
+  ## @param hedgedoc.readinessProbe.enabled Enable readiness probe
+  ## @param hedgedoc.readinessProbe.initialDelaySeconds Initial delay before readiness probe is initiated
+  ## @param hedgedoc.readinessProbe.timeoutSeconds Timeout for readiness probe
+  ## @param hedgedoc.readinessProbe.periodSeconds Period for readiness probe
+  ## @param hedgedoc.readinessProbe.successThreshold Success threshold for readiness probe
+  ## @param hedgedoc.readinessProbe.failureThreshold Failure threshold for readiness probe
+  # Modify the readiness probe for your needs or completely disable it by commenting out.
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 5
+    timeoutSeconds: 1
+    periodSeconds: 10
+    successThreshold: 1
+    failureThreshold: 3
+
+  # # Uncomment the startup probe to enable and modify it for your needs.
+  ## @section StartupProbe
+  #
+  ## @param hedgedoc.startupProbe.enabled Enable startup probe
+  ## @param hedgedoc.startupProbe.initialDelaySeconds Initial delay before startup probe is initiated
+  ## @param hedgedoc.startupProbe.timeoutSeconds Timeout for startup probe
+  ## @param hedgedoc.startupProbe.periodSeconds Period for startup probe
+  ## @param hedgedoc.startupProbe.successThreshold Success threshold for startup probe
+  ## @param hedgedoc.startupProbe.failureThreshold Failure threshold for startup probe
+  startupProbe:
+    enabled: false
+    initialDelaySeconds: 60
+    timeoutSeconds: 1
+    periodSeconds: 10
+    successThreshold: 1
+    failureThreshold: 10
+
+## @section PostgreSQL HA
+#
+## @extra postgresql-ha PostgreSQL HA Bitnami chart values. Visit: [PostgreSQL HA chart docs](https://artifacthub.io/packages/helm/bitnami/postgresql-ha)
+## @param postgresql-ha.enabled Enable PostgreSQL HA
+## @param postgresql-ha.postgresql.username Name for a custom user to create
+## @param postgresql-ha.postgresql.password Password for the `hedgedoc` user
+## @param postgresql-ha.postgresql.database Name for a custom database to create
+## @param postgresql-ha.postgresql.postgresPassword PostgreSQL password for the postgres user when username is not postgres
+## @param postgresql-ha.postgresql.repmgrPassword PostgreSQL repmgr password
+## @param postgresql-ha.pgpool.adminPassword Pgpool Admin password
+## @param postgresql-ha.persistence.size PVC Storage Request for PostgreSQL HA volume
+postgresql-ha:
+  enabled: true
+  postgresql:
+    username: hedgedoc
+    password: changeme
+    database: hedgedoc
+    postgresPassword: changeme
+    repmgrPassword: changeme
+  pgpool:
+    adminPassword: changeme
+  persistence:
+    size: 10Gi
+
+## @section PostgreSQL
+#
+## @extra postgresql PostgreSQL Bitnami chart values. Visit: [PostgreSQL chart docs](https://artifacthub.io/packages/helm/bitnami/postgresql)
+## @param postgresql.enabled Enable PostgreSQL
+## @param postgresql.auth.postgresPassword Password for the "postgres" admin user
+## @param postgresql.auth.username Name for a custom user to create
+## @param postgresql.auth.password Password for the `hedgedoc` user
+## @param postgresql.auth.database Name for a custom database to create
+## @param postgresql.primary.persistence.size PVC Storage Request for PostgreSQL volume
+postgresql:
+  enabled: false
+  auth:
+    postgresPassword: changeme
+    username: hedgedoc
+    password: changeme
+    database: hedgedoc
+  primary:
+    persistence:
+      size: 10Gi
+
+## @section Advanced
+## @param test.enabled Set it to false to disable test-connection Pod.
+## @param test.image.name Image name for the wget container used in the test-connection Pod.
+## @param test.image.tag Image tag for the wget container used in the test-connection Pod.
+test:
+  enabled: true
+  image:
+    name: busybox
+    tag: latest
+
+## @param extraDeploy Array of extra objects to deploy with the release
+##
+extraDeploy: []
