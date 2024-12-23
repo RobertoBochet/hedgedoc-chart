@@ -1,6 +1,6 @@
 apiVersion: v2
 name: hedgedoc
-description: HedgeDoc Helm chart for Kubernetes
+description: HedgeDoc (formerly known as CodiMD) is an open-source, web-based, self-hosted, collaborative markdown editor
 type: application
 version: 0.0.0
 appVersion: 1.10.0
@@ -15,6 +15,7 @@ keywords:
   - hedgedoc
   - hackmd
   - codimd
+home: https://hedgedoc.org/
 sources:
   - https://github.com/RobertoBochet/hedgedoc-chart
   - https://github.com/hedgedoc/hedgedoc
@@ -31,7 +32,7 @@ dependencies:
     repository: oci://registry-1.docker.io/bitnamicharts
     version: 16.3.2
     condition: postgresql.enabled
-  # https://github.com/bitnami/charts/blob/main/bitnami/postgresql-ha/Chart.yaml
+  # https://github.com/bitnami/charts/blob/main/bitnami/postgresql-ha
   - name: postgresql-ha
     repository: oci://registry-1.docker.io/bitnamicharts
     version: 15.1.1
