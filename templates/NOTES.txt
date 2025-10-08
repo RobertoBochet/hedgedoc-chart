@@ -21,18 +21,6 @@
 
 {{- $warnings := list -}}
 {{- $changeMeValues := list "hedgedoc.config.sessionSecret" -}}
-{{- if index .Values "postgresql-ha" "enabled" -}}
-  {{- $changeMeValues = concat $changeMeValues (list
-                                "postgresql-ha.postgresql.password"
-                                "postgresql-ha.postgresql.postgresPassword"
-                                "postgresql-ha.postgresql.repmgrPassword"
-                                "postgresql-ha.pgpool.adminPassword") -}}
-{{- end -}}
-{{- if .Values.postgresql.enabled -}}
-  {{- $changeMeValues = concat $changeMeValues (list
-                                "postgresql.auth.postgresPassword"
-                                "postgresql.auth.password") -}}
-{{- end -}}
 {{- range $changeMeValuePath := $changeMeValues -}}
   {{- $changeMeTpl := $changeMeValuePath | splitList "."  | join "\" \"" | printf "{{ index .Values \"%s\"}}" -}}
   {{- $changeMeValue := tpl $changeMeTpl $ -}}
@@ -51,4 +39,10 @@
 {{- range $warnings }}
   - {{ . }}
 {{- end }}
+{{- end }}
+
+{{- if or
+        (and (hasKey .Values "postgresql") (.Values.postgresql.enabled))
+        (and (hasKey .Values "postgresql-ha") (index .Values "postgresql-ha" "enabled")) }}
+   {{- fail "Bitnami postgres subcharts are deprecated! Make sure to migrate your database before the upgrade, than disable the subcharts and try again." -}}
 {{- end }}
