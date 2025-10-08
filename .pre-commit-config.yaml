@@ -1,23 +1,23 @@
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v5.0.0
+  rev: v6.0.0
   hooks:
     - id: end-of-file-fixer
       exclude: values.schema.json
     - id: trailing-whitespace
 - repo: https://github.com/gruntwork-io/pre-commit
-  rev: v0.1.25
+  rev: v0.1.30
   hooks:
     - id: helmlint
 - repo: https://github.com/bitnami/readme-generator-for-helm
-  rev: 2.6.1
+  rev: 2.7.2
   hooks:
     - id: helm-readme-generator
       pass_filenames: false
       always_run: true
       args: [--readme=README.md, --values=values.yaml, --schema=values.schema.json]
 - repo: https://github.com/tcort/markdown-link-check
-  rev: v3.13.6
+  rev: v3.13.7
   hooks:
     - id: markdown-link-check
       args: [-q]
