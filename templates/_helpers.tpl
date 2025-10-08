@@ -69,7 +69,6 @@ imagePullSecrets:
 {{- end }}
 {{- end -}}
 
-
 {{/*
 Storage Class
 */}}
@@ -100,40 +99,20 @@ app.kubernetes.io/name: {{ include "hedgedoc.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
-{{- define "postgresql-ha.dns" -}}
-{{- if (index .Values "postgresql-ha").enabled -}}
-{{- printf "%s.%s.svc.%s:%v" (include "postgresql-ha.pgpool" (index .Subcharts "postgresql-ha")) .Release.Namespace .Values.clusterDomain (index .Values "postgresql-ha" "service" "ports" "postgresql") -}}
-{{- end -}}
-{{- end -}}
+{{- define "hedgedoc.config" -}}
+  {{- $config := dict -}}
 
-{{- define "postgresql.dns" -}}
-{{- if (index .Values "postgresql").enabled -}}
-{{- printf "%s.%s.svc.%s:%s" (include "common.names.fullname" .Subcharts.postgresql) .Release.Namespace .Values.clusterDomain (include "postgresql.v1.service.port" .Subcharts.postgresql) -}}
-{{- end -}}
-{{- end -}}
-
-{{- define "hedgedoc.config.init" -}}
-  {{- /*assert that only one PG dep is enabled */ -}}
-  {{- if and (.Values.postgresql.enabled) (index .Values "postgresql-ha" "enabled") -}}
-    {{- fail "Only one of postgresql or postgresql-ha can be enabled at the same time." -}}
-  {{- end }}
-  {{- if not (.Values.hedgedoc.config.dbURL) -}}
-    {{- if (index .Values "postgresql-ha" "enabled") -}}
-      {{- $username := index .Values "postgresql-ha" "global" "postgresql" "username" | default (index .Values "postgresql-ha" "postgresql" "username") -}}
-      {{- $password := index .Values "postgresql-ha" "global" "postgresql" "password" | default (index .Values "postgresql-ha" "postgresql" "password") -}}
-      {{- $database := index .Values "postgresql-ha" "global" "postgresql" "database" | default (index .Values "postgresql-ha" "postgresql" "database") -}}
-      {{- $_ := set .Values.hedgedoc.config "dbURL" (printf "postgres://%s:%s@%s/%s" $username $password (include "postgresql-ha.dns" .) $database) -}}
-    {{- end -}}
-    {{- if (index .Values "postgresql" "enabled") -}}
-      {{- $username := index .Values "postgresql" "global" "postgresql" "auth" "username" | default (index .Values "postgresql" "auth" "username") -}}
-      {{- $password := index .Values "postgresql" "global" "postgresql" "auth" "password" | default (index .Values "postgresql" "auth" "password") -}}
-      {{- $database := index .Values "postgresql" "global" "postgresql" "auth" "database" | default (index .Values "postgresql" "auth" "database") -}}
-      {{- $_ := set .Values.hedgedoc.config "dbURL" (printf "postgres://%s:%s@%s/%s" $username $password (include "postgresql.dns" .) $database) -}}
+  {{- range $key, $val := .Values.hedgedoc.config -}}
+    {{- if not ($val | empty) -}}
+      {{- $_ := set $config $key $val -}}
     {{- end -}}
   {{- end -}}
-  {{- if and (eq .Values.hedgedoc.config.imageUploadType "filesystem") (not .Values.hedgedoc.config.uploadsPath) -}}
-    {{- $_ := set .Values.hedgedoc.config "uploadsPath" "/data" -}}
+
+  {{- if and (eq $config.imageUploadType "filesystem") (not $config.uploadsPath) -}}
+    {{- $_ := set $config "uploadsPath" "/data" -}}
   {{- end -}}
+
+  {{- toYaml $config }}
 {{- end -}}
 
 {{- define "hedgedoc.container-additional-mounts" -}}

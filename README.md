@@ -160,6 +160,14 @@
 | `hedgedoc.config.sessionSecret`                | Cookie session secret used to sign the session cookie. If none is set, one will randomly generated on each startup, meaning all your users will be logged out. Can be generated with e.g. pwgen -s 64 1                                                                                | `changeme`   |
 | `hedgedoc.config.email`                        | Set to allow email sign-in                                                                                                                                                                                                                                                             | `true`       |
 | `hedgedoc.config.allowEmailRegister`           | Set to allow registration of new accounts using an email address. If set to false, you can still create accounts using the command line. This setting has no effect if hedgedoc.config.email is false                                                                                  | `true`       |
+| `hedgedoc.config.dbUrl`                        | Set the uri for the database connection. Alternatively you can set the connection parameters individually in the `hedgedoc.config.db` dictionary                                                                                                                                       | `""`         |
+| `hedgedoc.config.db`                           | Dictionary for setting the database connection parameters. [More details here](https://sequelize.org/v5/manual/dialects.html)                                                                                                                                                          |              |
+| `hedgedoc.config.db.username`                  | Username used to authenticate to the database                                                                                                                                                                                                                                          | `undefined`  |
+| `hedgedoc.config.db.password`                  | Password used to authenticate to the database                                                                                                                                                                                                                                          | `undefined`  |
+| `hedgedoc.config.db.database`                  | Name of the database used to store hedgedoc data                                                                                                                                                                                                                                       | `undefined`  |
+| `hedgedoc.config.db.host`                      | Hostname used to connect the database server                                                                                                                                                                                                                                           | `undefined`  |
+| `hedgedoc.config.db.port`                      | Port used to connect the database server                                                                                                                                                                                                                                               | `undefined`  |
+| `hedgedoc.config.db.dialect`                   | [Dialect](https://sequelize.org/v5/manual/dialects.html) / protocol used to connect to the database                                                                                                                                                                                    | `undefined`  |
 | `hedgedoc.additionalConfigSources`             | Additional configuration from secret or configmap                                                                                                                                                                                                                                      | `[]`         |
 | `hedgedoc.additionalConfigFromEnvs`            | Additional configuration sources from environment variables                                                                                                                                                                                                                            | `[]`         |
 | `hedgedoc.podAnnotations`                      | Annotations for the Gitea pod                                                                                                                                                                                                                                                          | `{}`         |
@@ -196,32 +204,6 @@
 | `hedgedoc.startupProbe.periodSeconds`       | Period for startup probe                        | `10`    |
 | `hedgedoc.startupProbe.successThreshold`    | Success threshold for startup probe             | `1`     |
 | `hedgedoc.startupProbe.failureThreshold`    | Failure threshold for startup probe             | `10`    |
-
-### PostgreSQL HA
-
-| Name                                        | Description                                                                                                                       | Value      |
-| ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| `postgresql-ha`                             | PostgreSQL HA Bitnami chart values. Visit: [PostgreSQL HA chart docs](https://artifacthub.io/packages/helm/bitnami/postgresql-ha) |            |
-| `postgresql-ha.enabled`                     | Enable PostgreSQL HA                                                                                                              | `true`     |
-| `postgresql-ha.postgresql.username`         | Name for a custom user to create                                                                                                  | `hedgedoc` |
-| `postgresql-ha.postgresql.password`         | Password for the `hedgedoc` user                                                                                                  | `changeme` |
-| `postgresql-ha.postgresql.database`         | Name for a custom database to create                                                                                              | `hedgedoc` |
-| `postgresql-ha.postgresql.postgresPassword` | PostgreSQL password for the postgres user when username is not postgres                                                           | `changeme` |
-| `postgresql-ha.postgresql.repmgrPassword`   | PostgreSQL repmgr password                                                                                                        | `changeme` |
-| `postgresql-ha.pgpool.adminPassword`        | Pgpool Admin password                                                                                                             | `changeme` |
-| `postgresql-ha.persistence.size`            | PVC Storage Request for PostgreSQL HA volume                                                                                      | `10Gi`     |
-
-### PostgreSQL
-
-| Name                                  | Description                                                                                                              | Value      |
-| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | ---------- |
-| `postgresql`                          | PostgreSQL Bitnami chart values. Visit: [PostgreSQL chart docs](https://artifacthub.io/packages/helm/bitnami/postgresql) |            |
-| `postgresql.enabled`                  | Enable PostgreSQL                                                                                                        | `false`    |
-| `postgresql.auth.postgresPassword`    | Password for the "postgres" admin user                                                                                   | `changeme` |
-| `postgresql.auth.username`            | Name for a custom user to create                                                                                         | `hedgedoc` |
-| `postgresql.auth.password`            | Password for the `hedgedoc` user                                                                                         | `changeme` |
-| `postgresql.auth.database`            | Name for a custom database to create                                                                                     | `hedgedoc` |
-| `postgresql.primary.persistence.size` | PVC Storage Request for PostgreSQL volume                                                                                | `10Gi`     |
 
 ### Advanced
 

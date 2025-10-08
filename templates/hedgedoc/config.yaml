@@ -1,4 +1,4 @@
-{{- include "hedgedoc.config.init" . }}
+{{- $config := (include "hedgedoc.config" .) | fromYaml -}}
 apiVersion: v1
 kind: Secret
 metadata:
@@ -9,4 +9,4 @@ metadata:
 type: Opaque
 stringData:
   config.json: |
-    {{- dict "production" .Values.hedgedoc.config | toPrettyJson | nindent 4 }}
+    {{- dict "production" $config | toPrettyJson | nindent 4 }}
