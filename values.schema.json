@@ -510,6 +510,47 @@
                             "type": "string",
                             "description": "Set the uri for the database connection. Alternatively you can set the connection parameters individually in the `hedgedoc.config.db` dictionary",
                             "default": ""
+                        },
+                        "db": {
+                            "type": "object",
+                            "properties": {
+                                "username": {
+                                    "type": "string",
+                                    "description": "Username used to authenticate to the database",
+                                    "default": null,
+                                    "nullable": true
+                                },
+                                "password": {
+                                    "type": "string",
+                                    "description": "Password used to authenticate to the database",
+                                    "default": null,
+                                    "nullable": true
+                                },
+                                "database": {
+                                    "type": "string",
+                                    "description": "Name of the database used to store hedgedoc data",
+                                    "default": null,
+                                    "nullable": true
+                                },
+                                "host": {
+                                    "type": "string",
+                                    "description": "Hostname used to connect the database server",
+                                    "default": null,
+                                    "nullable": true
+                                },
+                                "port": {
+                                    "type": "string",
+                                    "description": "Port used to connect the database server",
+                                    "default": null,
+                                    "nullable": true
+                                },
+                                "dialect": {
+                                    "type": "string",
+                                    "description": "[Dialect](https://sequelize.org/v5/manual/dialects.html) / protocol used to connect to the database",
+                                    "default": null,
+                                    "nullable": true
+                                }
+                            }
                         }
                     }
                 },
