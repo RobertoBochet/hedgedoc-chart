@@ -267,6 +267,14 @@ hedgedoc:
   ## @param hedgedoc.config.sessionSecret Cookie session secret used to sign the session cookie. If none is set, one will randomly generated on each startup, meaning all your users will be logged out. Can be generated with e.g. pwgen -s 64 1
   ## @param hedgedoc.config.email Set to allow email sign-in
   ## @param hedgedoc.config.allowEmailRegister Set to allow registration of new accounts using an email address. If set to false, you can still create accounts using the command line. This setting has no effect if hedgedoc.config.email is false
+  ## @param hedgedoc.config.dbUrl Set the uri for the database connection. Alternatively you can set the connection parameters individually in the `hedgedoc.config.db` dictionary
+  ## @extra hedgedoc.config.db Dictionary for setting the database connection parameters. [More details here](https://sequelize.org/v5/manual/dialects.html)
+  ## @param hedgedoc.config.db.username [string, nullable] Username used to authenticate to the database
+  ## @param hedgedoc.config.db.password [string, nullable] Password used to authenticate to the database
+  ## @param hedgedoc.config.db.database [string, nullable] Name of the database used to store hedgedoc data
+  ## @param hedgedoc.config.db.host [string, nullable] Hostname used to connect the database server
+  ## @param hedgedoc.config.db.port [string, nullable] Port used to connect the database server
+  ## @param hedgedoc.config.db.dialect [string, nullable] [Dialect](https://sequelize.org/v5/manual/dialects.html) / protocol used to connect to the database
   config:
     imageUploadType: "filesystem"
     domain: ""
@@ -280,6 +288,14 @@ hedgedoc:
     sessionSecret: "changeme"
     email: true
     allowEmailRegister: true
+    dbUrl: ""
+#    db:
+#      username: ""
+#      password: ""
+#      database: ""
+#      host: ""
+#      port: 5432
+#      dialect: ""
 
   ## @param hedgedoc.additionalConfigSources Additional configuration from secret or configmap
   additionalConfigSources: []
@@ -346,50 +362,6 @@ hedgedoc:
     periodSeconds: 10
     successThreshold: 1
     failureThreshold: 10
-
-## @section PostgreSQL HA
-#
-## @extra postgresql-ha PostgreSQL HA Bitnami chart values. Visit: [PostgreSQL HA chart docs](https://artifacthub.io/packages/helm/bitnami/postgresql-ha)
-## @param postgresql-ha.enabled Enable PostgreSQL HA
-## @param postgresql-ha.postgresql.username Name for a custom user to create
-## @param postgresql-ha.postgresql.password Password for the `hedgedoc` user
-## @param postgresql-ha.postgresql.database Name for a custom database to create
-## @param postgresql-ha.postgresql.postgresPassword PostgreSQL password for the postgres user when username is not postgres
-## @param postgresql-ha.postgresql.repmgrPassword PostgreSQL repmgr password
-## @param postgresql-ha.pgpool.adminPassword Pgpool Admin password
-## @param postgresql-ha.persistence.size PVC Storage Request for PostgreSQL HA volume
-postgresql-ha:
-  enabled: true
-  postgresql:
-    username: hedgedoc
-    password: changeme
-    database: hedgedoc
-    postgresPassword: changeme
-    repmgrPassword: changeme
-  pgpool:
-    adminPassword: changeme
-  persistence:
-    size: 10Gi
-
-## @section PostgreSQL
-#
-## @extra postgresql PostgreSQL Bitnami chart values. Visit: [PostgreSQL chart docs](https://artifacthub.io/packages/helm/bitnami/postgresql)
-## @param postgresql.enabled Enable PostgreSQL
-## @param postgresql.auth.postgresPassword Password for the "postgres" admin user
-## @param postgresql.auth.username Name for a custom user to create
-## @param postgresql.auth.password Password for the `hedgedoc` user
-## @param postgresql.auth.database Name for a custom database to create
-## @param postgresql.primary.persistence.size PVC Storage Request for PostgreSQL volume
-postgresql:
-  enabled: false
-  auth:
-    postgresPassword: changeme
-    username: hedgedoc
-    password: changeme
-    database: hedgedoc
-  primary:
-    persistence:
-      size: 10Gi
 
 ## @section Advanced
 ## @param test.enabled Set it to false to disable test-connection Pod.

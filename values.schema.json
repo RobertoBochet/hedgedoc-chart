@@ -505,6 +505,11 @@
                             "type": "boolean",
                             "description": "Set to allow registration of new accounts using an email address. If set to false, you can still create accounts using the command line. This setting has no effect if hedgedoc.config.email is false",
                             "default": true
+                        },
+                        "dbUrl": {
+                            "type": "string",
+                            "description": "Set the uri for the database connection. Alternatively you can set the connection parameters individually in the `hedgedoc.config.db` dictionary",
+                            "default": ""
                         }
                     }
                 },
@@ -627,116 +632,6 @@
                             "type": "number",
                             "description": "Failure threshold for startup probe",
                             "default": 10
-                        }
-                    }
-                }
-            }
-        },
-        "postgresql-ha": {
-            "type": "object",
-            "properties": {
-                "enabled": {
-                    "type": "boolean",
-                    "description": "Enable PostgreSQL HA",
-                    "default": true
-                },
-                "postgresql": {
-                    "type": "object",
-                    "properties": {
-                        "username": {
-                            "type": "string",
-                            "description": "Name for a custom user to create",
-                            "default": "hedgedoc"
-                        },
-                        "password": {
-                            "type": "string",
-                            "description": "Password for the `hedgedoc` user",
-                            "default": "changeme"
-                        },
-                        "database": {
-                            "type": "string",
-                            "description": "Name for a custom database to create",
-                            "default": "hedgedoc"
-                        },
-                        "postgresPassword": {
-                            "type": "string",
-                            "description": "PostgreSQL password for the postgres user when username is not postgres",
-                            "default": "changeme"
-                        },
-                        "repmgrPassword": {
-                            "type": "string",
-                            "description": "PostgreSQL repmgr password",
-                            "default": "changeme"
-                        }
-                    }
-                },
-                "pgpool": {
-                    "type": "object",
-                    "properties": {
-                        "adminPassword": {
-                            "type": "string",
-                            "description": "Pgpool Admin password",
-                            "default": "changeme"
-                        }
-                    }
-                },
-                "persistence": {
-                    "type": "object",
-                    "properties": {
-                        "size": {
-                            "type": "string",
-                            "description": "PVC Storage Request for PostgreSQL HA volume",
-                            "default": "10Gi"
-                        }
-                    }
-                }
-            }
-        },
-        "postgresql": {
-            "type": "object",
-            "properties": {
-                "enabled": {
-                    "type": "boolean",
-                    "description": "Enable PostgreSQL",
-                    "default": false
-                },
-                "auth": {
-                    "type": "object",
-                    "properties": {
-                        "postgresPassword": {
-                            "type": "string",
-                            "description": "Password for the \"postgres\" admin user",
-                            "default": "changeme"
-                        },
-                        "username": {
-                            "type": "string",
-                            "description": "Name for a custom user to create",
-                            "default": "hedgedoc"
-                        },
-                        "password": {
-                            "type": "string",
-                            "description": "Password for the `hedgedoc` user",
-                            "default": "changeme"
-                        },
-                        "database": {
-                            "type": "string",
-                            "description": "Name for a custom database to create",
-                            "default": "hedgedoc"
-                        }
-                    }
-                },
-                "primary": {
-                    "type": "object",
-                    "properties": {
-                        "persistence": {
-                            "type": "object",
-                            "properties": {
-                                "size": {
-                                    "type": "string",
-                                    "description": "PVC Storage Request for PostgreSQL volume",
-                                    "default": "10Gi"
-                                }
-                            }
                         }
                     }
                 }
