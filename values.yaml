@@ -294,7 +294,7 @@ hedgedoc:
 #      password: ""
 #      database: ""
 #      host: ""
-#      port: 5432
+#      port: "5432"
 #      dialect: ""
 
   ## @param hedgedoc.additionalConfigSources Additional configuration from secret or configmap
