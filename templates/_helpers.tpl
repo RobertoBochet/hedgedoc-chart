@@ -103,8 +103,14 @@ app.kubernetes.io/instance: {{ .Release.Name }}
   {{- $config := dict -}}
 
   {{- range $key, $val := .Values.hedgedoc.config -}}
-    {{- if not ($val | empty) -}}
-      {{- $_ := set $config $key $val -}}
+    {{- if not (kindIs "invalid" $val) -}}
+      {{- if kindIs "string" $val -}}
+        {{- if not (eq $val "") -}}
+          {{- $_ := set $config $key $val -}}
+        {{- end -}}
+      {{- else -}}
+          {{- $_ := set $config $key $val -}}
+      {{- end -}}
     {{- end -}}
   {{- end -}}
 
