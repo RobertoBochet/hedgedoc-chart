@@ -140,7 +140,8 @@ spec:
           {{- toYaml $value | nindent 10 }}
         {{- end }}
         - name: temp
-          emptyDir: {}
+          emptyDir:
+            medium: Memory
   {{- if .Values.persistence.enabled }}
     {{- if .Values.persistence.mount }}
         - name: data
