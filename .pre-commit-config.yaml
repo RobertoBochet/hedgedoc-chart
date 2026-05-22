@@ -10,14 +10,14 @@ repos:
   hooks:
     - id: helmlint
 - repo: https://github.com/bitnami/readme-generator-for-helm
-  rev: 2.7.2
+  rev: 2.8.1
   hooks:
     - id: helm-readme-generator
       pass_filenames: false
       always_run: true
       args: [--readme=README.md, --values=values.yaml, --schema=values.schema.json]
 - repo: https://github.com/tcort/markdown-link-check
-  rev: v3.13.7
+  rev: v3.14.2
   hooks:
     - id: markdown-link-check
       args: [-q]
