@@ -10,7 +10,7 @@ repos:
   hooks:
     - id: helmlint
 - repo: https://github.com/bitnami/readme-generator-for-helm
-  rev: 2.8.1
+  rev: 3.0.1
   hooks:
     - id: helm-readme-generator
       pass_filenames: false
