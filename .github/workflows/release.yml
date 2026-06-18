@@ -10,7 +10,7 @@ jobs:
     name: "Build chart"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Set chart version
         run: |
           VERSION="${GITHUB_REF/refs\/tags\//}"
@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-chart
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           repository: '${{ github.repository_owner }}/charts'
           ref: 'charts'
