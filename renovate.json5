@@ -1,9 +1,11 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
 
-  "configMigration": true,
-
-  "dependencyDashboard": true,
+  "extends": [
+    ":dependencyDashboard",
+    ":configMigration",
+    "helpers:pinGitHubActionDigests"
+  ],
 
   "prHourlyLimit": 0,
   "prConcurrentLimit": 15,
@@ -66,6 +68,7 @@
       "matchManagers": ["pre-commit"],
       "matchUpdateTypes": ["major", "minor", "patch"],
       "groupName": "pre-commit hooks",
+      "minimumReleaseAge": "3 days",
       "semanticCommitType": "chore",
       "semanticCommitScope": "pre-commit",
       "automerge": true
@@ -78,8 +81,9 @@
     },
     {
       "matchManagers": ["github-actions"],
-      "matchUpdateTypes": ["major", "minor", "patch"],
+      "matchUpdateTypes": ["major", "minor", "patch", "digest"],
       "groupName": "workflow actions",
+      "minimumReleaseAge": "3 days",
       "semanticCommitType": "ci",
       "semanticCommitScope": "",
       "automerge": true
