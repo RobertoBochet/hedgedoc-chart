@@ -7,13 +7,13 @@ jobs:
     if: "github.event.action != 'labeled' || github.event.label.name == 'pre-commit ci run'"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - run: gh pr edit ${{ github.event.number }} --remove-label 'pre-commit ci run'
         if: github.event.action == 'labeled' && github.event.label.name == 'pre-commit ci run'
         env:
           GH_TOKEN: ${{ github.token }}
       - name: Helm tool installer
-        uses: Azure/setup-helm@1a275c3b69536ee54be43f2070a358922e12c8d4 # v4.3.1
+        uses: Azure/setup-helm@9bc31f4ebc9c6b171d7bfbaa5d006ae7abdb4310 # v5.0.1
         with:
           version: "3.16.3"
       - name: Build dependencies
