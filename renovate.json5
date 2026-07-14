@@ -12,7 +12,7 @@
 
   "automerge": false,
   "automergeType": "pr",
-  "automergeStrategy": "squash",
+  "automergeStrategy": "rebase",
   "platformAutomerge": true,
 
   "semanticCommits": "enabled",
