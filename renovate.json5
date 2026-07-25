@@ -19,6 +19,9 @@
   "semanticCommitType": "chore",
   "semanticCommitScope": "",
 
+  "minimumReleaseAge": "3 days",
+  "minimumReleaseAgeBehaviour": "timestamp-optional",
+
   "enabledManagers": [
     "custom.regex",
     "pre-commit",
@@ -43,34 +46,38 @@
 
   "packageRules": [
     {
-      "matchPackageNames": ["quay.io/hedgedoc/hedgedoc"],
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["/hedgedoc$/"],
       "matchUpdateTypes": ["major", "minor", "patch"],
       "commitMessageAction": "bump",
       "commitMessageTopic": "hedgedoc",
-      "semanticCommitType": "fix",
+      "semanticCommitType": "chore",
       "semanticCommitScope": "app",
       "automerge": true
     },
     {
-      "matchPackageNames": ["quay.io/hedgedoc/hedgedoc"],
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["/hedgedoc$/"],
       "matchUpdateTypes": ["major", "minor"],
       "commitMessageAction": "update",
       "semanticCommitType": "feat",
       "automerge": false
     },
     {
-      "matchPackageNames": ["quay.io/hedgedoc/hedgedoc"],
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["/hedgedoc$/"],
       "matchUpdateTypes": ["major"],
       "commitMessagePrefix": "feat(app)!:",
       "automerge": false
     },
+
     {
       "matchManagers": ["pre-commit"],
       "matchUpdateTypes": ["major", "minor", "patch"],
       "groupName": "pre-commit hooks",
-      "minimumReleaseAge": "3 days",
       "semanticCommitType": "chore",
       "semanticCommitScope": "pre-commit",
+      "commitMessageAction": "update",
       "automerge": true
     },
     {
@@ -79,13 +86,24 @@
       "groupName": null,
       "automerge": false
     },
+
     {
       "matchManagers": ["github-actions"],
-      "matchUpdateTypes": ["major", "minor", "patch", "digest"],
-      "groupName": "workflow actions",
-      "minimumReleaseAge": "3 days",
+      "matchUpdateTypes": ["major", "minor", "patch", "digest", "pinDigest"],
       "semanticCommitType": "ci",
       "semanticCommitScope": "",
+      "commitMessageAction": "update"
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "matchDepTypes": ["action"],
+      "groupName": "workflow actions",
+      "automerge": true
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "matchDepTypes": ["container"],
+      "groupName": "workflow containers",
       "automerge": true
     },
     {
@@ -93,6 +111,17 @@
       "matchUpdateTypes": ["major"],
       "groupName": null,
       "automerge": false
+    },
+
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["/^quay\\.io/"],
+      "minimumReleaseAge": null
+    },
+    // limit all dev tool updates to once a week
+    {
+      "matchManagers": ["pre-commit", "github-actions"],
+      "schedule": ["* * * * 1"]
     }
   ]
 }
